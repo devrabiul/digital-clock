@@ -83,10 +83,10 @@ body {
 }
 
 .digital-clock-container .group-container .digit-item {
-    --size: 10rem;
+    --size: 5rem;
     height: var(--size);
     width: var(--size);
-    font-size: calc(var(--size) - 1rem);
+    font-size: calc(var(--size) - 0.5rem);
     font-weight: 800;
     display: flex;
     color: #fafafa;
@@ -102,17 +102,24 @@ body {
     user-select: none;
 }
 
-@media only screen and (max-width: 1200px) {
+@media (min-width: 992px) {
     .digital-clock-container .group-container .digit-item {
         --size: 5rem;
         font-size: calc(var(--size) - 0.5rem);
     }
 }
 
-@media only screen and (max-width: 600px) {
+@media (min-width: 1200px) {
     .digital-clock-container .group-container .digit-item {
-        --size: 5rem;
-        font-size: calc(var(--size) - 0.5rem);
+        --size: 7rem;
+        font-size: calc(var(--size) - 1rem);
+    }
+}
+
+@media (min-width: 1400px) {
+    .digital-clock-container .group-container .digit-item {
+        --size: 10rem;
+        font-size: calc(var(--size) - 1rem);
     }
 }
 
