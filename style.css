@@ -1,0 +1,255 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: "Lato", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-position: center;
+    background-size: cover;
+    background-image: url('./hero-section-bg-2.svg');
+    background-repeat: no-repeat;
+}
+
+.root-container {
+    padding: 2rem 0;
+}
+
+.digital-clock-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 1rem;
+    padding: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 768px) {
+    .digital-clock-container {
+        gap: 0.25rem;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .digital-clock-container {
+        flex-direction: column;
+        gap: 2.5rem;
+        padding: 1.5rem;
+    }
+}
+
+.digital-clock-container .group-container {
+    display: flex;
+    justify-content: center;
+    gap: 1.25rem;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.digital-clock-container .digit-item-type {
+    position: absolute;
+    top: auto;
+    bottom: -2rem;
+    inset-inline-end: 0;
+    user-select: none;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+@media only screen and (max-width: 768px) {
+    .digital-clock-container .digit-item-type {
+        bottom: -2.5rem;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .digital-clock-container .digit-item-type {
+        margin: auto;
+        inset-inline-end: unset;
+    }
+}
+
+.digital-clock-container .group-container .digit-item {
+    --size: 10rem;
+    height: var(--size);
+    width: var(--size);
+    font-size: calc(var(--size) - 1rem);
+    font-weight: 800;
+    display: flex;
+    color: #fafafa;
+    background-color: #222222;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease-in-out;
+    outline: .35rem solid #FFF;
+    box-shadow: 7px 11px 17px 3px #b1b1b12b;
+    user-select: none;
+}
+
+@media only screen and (max-width: 1200px) {
+    .digital-clock-container .group-container .digit-item {
+        --size: 5rem;
+        font-size: calc(var(--size) - 0.5rem);
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .digital-clock-container .group-container .digit-item {
+        --size: 5rem;
+        font-size: calc(var(--size) - 0.5rem);
+    }
+}
+
+.digital-clock-container .separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+    .digital-clock-container .separator {
+        flex-direction: row;
+        display: none;
+    }
+}
+
+.digital-clock-container .separator-item {
+    width: 1rem;
+    height: 1rem;
+    background-color: #222222;
+    border-radius: 0.25rem;
+}
+
+@media only screen and (max-width: 768px) {
+    .digital-clock-container .separator-item {
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .digital-clock-container .separator-item {
+        width: 0.6rem;
+        height: 0.6rem;
+    }
+}
+
+
+.clock-header-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #222222;
+    padding: 1rem 0;
+    letter-spacing: .25rem;
+    text-transform: uppercase;
+    user-select: none;
+}
+
+@media only screen and (max-width: 768px) {
+    .clock-header-container {
+        font-size: 1.5rem;
+    }
+}
+
+.github-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 70px;
+    border: 1px solid #222222;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    z-index: 1000;
+    padding: .35rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .5s ease-in-out all;
+}
+
+.github-btn:hover {
+    filter: invert(1);
+    background: #fff;
+}
+
+.github-btn img {
+    max-height: 20px;
+    width: auto;
+    object-fit: contain;
+}
+
+#fullscreen-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #222222;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Two columns */
+    grid-template-rows: 1fr 1fr;
+    /* Two rows */
+    justify-items: center;
+    align-items: center;
+    z-index: 1000;
+    padding: .5rem;
+    transition: background-color 0.3s ease;
+    gap: .75rem;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+#fullscreen-btn:hover {
+    background-color: #444444;
+}
+
+.fullscreen-icon {
+    width: .25rem;
+    height: .25rem;
+    display: block;
+    background-color: transparent;
+}
+
+.fullscreen-btn .fullscreen-icon:nth-child(1) {
+    border-inline-start: 1px solid #fff;
+    border-block-start: 1px solid #fff;
+}
+
+.fullscreen-btn .fullscreen-icon:nth-child(2) {
+    border-inline-end: 1px solid #fff;
+    border-block-start: 1px solid #fff;
+}
+
+.fullscreen-btn .fullscreen-icon:nth-child(3) {
+    border-inline-start: 1px solid #fff;
+    border-block-end: 1px solid #fff;
+}
+
+.fullscreen-btn .fullscreen-icon:nth-child(4) {
+    border-inline-end: 1px solid #fff;
+    border-block-end: 1px solid #fff;
+}
