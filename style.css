@@ -117,40 +117,153 @@ body::before,
 body::after {
     content: "";
     position: fixed;
-    inset: -15%;
+    inset: -20%;
     z-index: -1;
     pointer-events: none;
     opacity: var(--blob-opacity);
     filter: blur(var(--blob-blur));
-    will-change: transform;
-    transition: opacity 0.4s ease;
+    will-change: transform, filter;
 }
 
 body::before {
     background-image:
         radial-gradient(38% 42% at 18% 28%, var(--blob-1), transparent 70%),
         radial-gradient(32% 38% at 82% 18%, var(--blob-2), transparent 70%);
-    animation: blob-drift-a 22s ease-in-out infinite alternate;
+    animation:
+        blob-drift-a 14s ease-in-out infinite alternate,
+        blob-hue 30s linear infinite;
 }
 
 body::after {
     background-image:
         radial-gradient(36% 38% at 72% 78%, var(--blob-3), transparent 70%),
         radial-gradient(28% 32% at 22% 82%, var(--blob-4), transparent 70%);
-    animation: blob-drift-b 28s ease-in-out infinite alternate;
-    animation-delay: -8s;
+    animation:
+        blob-drift-b 18s ease-in-out infinite alternate,
+        blob-hue 35s linear infinite reverse;
+    animation-delay: -6s, 0s;
 }
 
 @keyframes blob-drift-a {
     0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
-    50%  { transform: translate3d(-4%, 3%, 0) scale(1.08) rotate(6deg); }
-    100% { transform: translate3d(3%, -2%, 0) scale(0.96) rotate(-4deg); }
+    25%  { transform: translate3d(-8%, 5%, 0) scale(1.12) rotate(8deg); }
+    50%  { transform: translate3d(-3%, -6%, 0) scale(0.94) rotate(-6deg); }
+    75%  { transform: translate3d(6%, 4%, 0) scale(1.1) rotate(10deg); }
+    100% { transform: translate3d(4%, -4%, 0) scale(0.96) rotate(-8deg); }
 }
 
 @keyframes blob-drift-b {
     0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
-    50%  { transform: translate3d(4%, -3%, 0) scale(0.94) rotate(-5deg); }
-    100% { transform: translate3d(-3%, 4%, 0) scale(1.06) rotate(4deg); }
+    25%  { transform: translate3d(7%, -5%, 0) scale(0.9) rotate(-7deg); }
+    50%  { transform: translate3d(-5%, 7%, 0) scale(1.14) rotate(9deg); }
+    75%  { transform: translate3d(-8%, -3%, 0) scale(1.05) rotate(-10deg); }
+    100% { transform: translate3d(5%, 6%, 0) scale(0.92) rotate(6deg); }
+}
+
+@keyframes blob-hue {
+    0%   { filter: blur(var(--blob-blur)) hue-rotate(0deg); }
+    100% { filter: blur(var(--blob-blur)) hue-rotate(360deg); }
+}
+
+.bg-particles {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    left: var(--x, 50%);
+    top: 110%;
+    width: var(--size, 14px);
+    height: var(--size, 14px);
+    background-color: var(--color, var(--fg));
+    border-radius: 50%;
+    opacity: 0.55;
+    filter:
+        drop-shadow(0 0 4px var(--color, var(--fg)))
+        drop-shadow(0 0 10px var(--color, var(--fg)));
+    animation: particle-float var(--duration, 22s) linear infinite;
+    animation-delay: var(--delay, 0s);
+    will-change: transform, opacity;
+}
+
+.particle.square {
+    border-radius: 24%;
+}
+
+.particle.ring {
+    background-color: transparent;
+    border: 2px solid var(--color, var(--fg));
+    opacity: 0.7;
+}
+
+.particle.triangle {
+    border-radius: 0;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.particle.diamond {
+    border-radius: 0;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.particle.hexagon {
+    border-radius: 0;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.particle.star {
+    border-radius: 0;
+    clip-path: polygon(
+        50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%,
+        50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%
+    );
+}
+
+.particle.plus {
+    border-radius: 0;
+    clip-path: polygon(
+        35% 0%, 65% 0%, 65% 35%, 100% 35%,
+        100% 65%, 65% 65%, 65% 100%, 35% 100%,
+        35% 65%, 0% 65%, 0% 35%, 35% 35%
+    );
+}
+
+.particle.blob {
+    border-radius: 65% 35% 50% 50% / 55% 45% 55% 45%;
+}
+
+@keyframes particle-float {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate3d(30px, -60vh, 0) rotate(180deg);
+        opacity: 0.75;
+    }
+    90% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate3d(-15px, -125vh, 0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .particle {
+        animation: none;
+        top: auto;
+        bottom: var(--x, 30%);
+        opacity: 0.08;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
