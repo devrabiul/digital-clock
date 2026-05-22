@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0d0e12" media="(prefers-color-scheme: dark)">
     <meta name="description" content="A sleek and modern digital clock built with HTML, CSS, and JavaScript. Perfect for checking the time with a stylish flip animation effect.">
     <meta name="keywords" content="digital clock, JavaScript clock, CSS clock, HTML time display, flip animation clock, current time">
     <meta name="author" content="Muhammad Rabiul">
@@ -20,24 +23,44 @@
 
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('theme');
+                if (t === 'dark' || t === 'light') {
+                    document.documentElement.setAttribute('data-theme', t);
+                }
+            } catch (e) { }
+        })();
+    </script>
 </head>
 
 <body>
 
-    <button id="fullscreen-btn" class="fullscreen-btn" aria-label="Toggle full-screen mode">
+    <button id="fullscreen-btn" class="action-btn fullscreen-btn" aria-label="Toggle full-screen mode">
         <span class="fullscreen-icon"></span>
         <span class="fullscreen-icon"></span>
         <span class="fullscreen-icon"></span>
         <span class="fullscreen-icon"></span>
     </button>
 
-    <a class="github-btn" aria-label="github" href="https://github.com/devrabiul" target="_blank">
-        <img src="github.svg" alt="github profile" srcset="">
+    <button id="theme-btn" class="action-btn" aria-label="Toggle light and dark theme">
+        <span class="theme-icon"></span>
+    </button>
+
+    <a class="action-btn github-btn" aria-label="github" href="https://github.com/devrabiul" target="_blank" rel="noopener">
+        <img src="github.svg" alt="github profile">
     </a>
 
 
-    <div class="root-container">
-        <div class="clock-header-container">
+    <div class="root-container" data-mode="clock">
+        <div class="mode-switcher" role="tablist" aria-label="Display mode">
+            <button class="mode-btn active" data-mode="clock" role="tab" aria-selected="true">Clock</button>
+            <button class="mode-btn" data-mode="stopwatch" role="tab" aria-selected="false">Stopwatch</button>
+            <button class="mode-btn" data-mode="timer" role="tab" aria-selected="false">Timer</button>
+        </div>
+
+        <div class="clock-header-container clock-top-header">
             <div class="clock-header-day"></div>
         </div>
 
@@ -89,7 +112,47 @@
             </div>
         </div>
 
-        <div class="clock-header-container">
+        <div class="clock-controls">
+            <div class="controls-group" data-controls="stopwatch">
+                <div class="controls-row">
+                    <button class="control-btn primary" id="sw-toggle">Start</button>
+                    <button class="control-btn" id="sw-reset">Reset</button>
+                </div>
+            </div>
+
+            <div class="controls-group" data-controls="timer">
+                <div class="timer-presets" role="group" aria-label="Timer presets">
+                    <button class="preset-btn" data-preset="60">1m</button>
+                    <button class="preset-btn active" data-preset="300">5m</button>
+                    <button class="preset-btn" data-preset="600">10m</button>
+                    <button class="preset-btn" data-preset="1500">25m</button>
+                    <button class="preset-btn" data-preset="3600">1h</button>
+                </div>
+                <div class="timer-adjusters" role="group" aria-label="Custom duration">
+                    <div class="adjuster">
+                        <button class="adjust-btn" data-adjust="hour" data-delta="1" aria-label="Increase hours">+</button>
+                        <span class="adjuster-label">H</span>
+                        <button class="adjust-btn" data-adjust="hour" data-delta="-1" aria-label="Decrease hours">−</button>
+                    </div>
+                    <div class="adjuster">
+                        <button class="adjust-btn" data-adjust="minute" data-delta="1" aria-label="Increase minutes">+</button>
+                        <span class="adjuster-label">M</span>
+                        <button class="adjust-btn" data-adjust="minute" data-delta="-1" aria-label="Decrease minutes">−</button>
+                    </div>
+                    <div class="adjuster">
+                        <button class="adjust-btn" data-adjust="second" data-delta="1" aria-label="Increase seconds">+</button>
+                        <span class="adjuster-label">S</span>
+                        <button class="adjust-btn" data-adjust="second" data-delta="-1" aria-label="Decrease seconds">−</button>
+                    </div>
+                </div>
+                <div class="controls-row">
+                    <button class="control-btn primary" id="tm-toggle">Start</button>
+                    <button class="control-btn" id="tm-reset">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="clock-header-container clock-bottom-header">
             <div class="clock-header-date"></div>
             <div class="clock-header-month"></div>
             <div class="clock-header-year"></div>
