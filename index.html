@@ -33,6 +33,10 @@
                 if (localStorage.getItem('particles') === 'off') {
                     document.documentElement.setAttribute('data-particles', 'off');
                 }
+                var s = localStorage.getItem('skin');
+                if (s && s !== 'glass' && ['led', 'flip', 'terminal'].indexOf(s) !== -1) {
+                    document.documentElement.setAttribute('data-skin', s);
+                }
             } catch (e) { }
         })();
     </script>
@@ -80,6 +84,18 @@
             <span></span>
             <span></span>
         </span>
+    </button>
+
+    <button id="skin-btn" class="action-btn" aria-label="Change clock skin">
+        <span class="skin-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+    </button>
+
+    <button id="shortcuts-btn" class="action-btn" aria-label="Show keyboard shortcuts">
+        <span class="shortcuts-icon">?</span>
     </button>
 
     <a class="action-btn github-btn" aria-label="github" href="https://github.com/devrabiul" target="_blank" rel="noopener">
@@ -190,6 +206,22 @@
             <div class="clock-header-date"></div>
             <div class="clock-header-month"></div>
             <div class="clock-header-year"></div>
+        </div>
+    </div>
+
+    <div class="shortcuts-overlay" id="shortcuts-overlay" hidden role="dialog" aria-labelledby="shortcuts-title" aria-modal="true">
+        <div class="shortcuts-card" role="document">
+            <button class="shortcuts-close" id="shortcuts-close" aria-label="Close shortcuts">&times;</button>
+            <h2 id="shortcuts-title">Keyboard Shortcuts</h2>
+            <dl class="shortcuts-list">
+                <div><dt><kbd>?</kbd></dt><dd>Show / hide this overlay</dd></div>
+                <div><dt><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></dt><dd>Switch Clock / Stopwatch / Timer</dd></div>
+                <div><dt><kbd>Space</kbd></dt><dd>Start / Pause</dd></div>
+                <div><dt><kbd>R</kbd></dt><dd>Reset</dd></div>
+                <div><dt><kbd>F</kbd></dt><dd>Toggle fullscreen</dd></div>
+                <div><dt><kbd>Esc</kbd></dt><dd>Close this overlay</dd></div>
+            </dl>
+            <p class="shortcuts-hint">Tip: click and drag a digit horizontally to scrub-spin it, or click the background for a particle burst.</p>
         </div>
     </div>
 

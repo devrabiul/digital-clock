@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Share+Tech+Mono&family=VT323&display=swap');
 
 :root {
     color-scheme: light dark;
@@ -80,6 +80,81 @@
         --blob-opacity: 0.45;
         --blob-blur: 90px;
     }
+}
+
+/* Seasonal palette overrides (auto-applied via JS or via #hash preview) */
+[data-season="halloween"] {
+    --blob-1: rgba(255, 117, 24, 0.85);
+    --blob-2: rgba(106, 13, 173, 0.85);
+    --blob-3: rgba(57, 255, 20, 0.6);
+    --blob-4: rgba(20, 0, 30, 0.85);
+}
+
+[data-season="christmas"] {
+    --blob-1: rgba(200, 16, 46, 0.85);
+    --blob-2: rgba(0, 103, 71, 0.85);
+    --blob-3: rgba(255, 215, 0, 0.7);
+    --blob-4: rgba(255, 255, 255, 0.55);
+}
+
+[data-season="nye"] {
+    --blob-1: rgba(255, 215, 0, 0.85);
+    --blob-2: rgba(192, 192, 192, 0.85);
+    --blob-3: rgba(13, 71, 161, 0.7);
+    --blob-4: rgba(220, 20, 60, 0.75);
+}
+
+[data-season="valentines"] {
+    --blob-1: rgba(255, 105, 180, 0.85);
+    --blob-2: rgba(220, 20, 60, 0.85);
+    --blob-3: rgba(255, 192, 203, 0.85);
+    --blob-4: rgba(255, 255, 255, 0.55);
+}
+
+/* Skin overrides — use html[data-skin] so they win over theme rules */
+html[data-skin="led"] {
+    --bg: #040804;
+    --fg: #39ff14;
+    --muted: rgba(57, 255, 20, 0.5);
+    --digit-bg: #0a0e0a;
+    --digit-fg: #39ff14;
+    --digit-border: rgba(57, 255, 20, 0.18);
+    --digit-highlight: transparent;
+    --digit-gloss: linear-gradient(180deg, rgba(57, 255, 20, 0.08) 0%, transparent 50%);
+    --digit-seam: rgba(57, 255, 20, 0.15);
+    --digit-shadow: 0 0 30px rgba(57, 255, 20, 0.25);
+    --separator: #39ff14;
+    --btn-bg: rgba(10, 14, 10, 0.6);
+    --btn-fg: #39ff14;
+    --btn-border: rgba(57, 255, 20, 0.25);
+    --btn-hover-bg: rgba(57, 255, 20, 0.15);
+}
+
+html[data-skin="flip"] {
+    --bg: #1a1410;
+    --fg: #f5e6d3;
+    --muted: rgba(245, 230, 211, 0.55);
+    --digit-fg: #f5e6d3;
+    --digit-border: rgba(0, 0, 0, 0.6);
+    --digit-highlight: rgba(255, 255, 255, 0.04);
+    --digit-gloss: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+    --digit-seam: rgba(0, 0, 0, 0.85);
+    --digit-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    --separator: #f5e6d3;
+    --btn-bg: rgba(44, 37, 32, 0.7);
+    --btn-fg: #f5e6d3;
+    --btn-border: rgba(245, 230, 211, 0.2);
+    --btn-hover-bg: rgba(245, 230, 211, 0.15);
+}
+
+html[data-skin="terminal"] {
+    --digit-bg: transparent;
+    --digit-border: var(--fg);
+    --digit-highlight: transparent;
+    --digit-gloss: none;
+    --digit-seam: transparent;
+    --digit-shadow: none;
+    --separator: var(--fg);
 }
 
 * {
@@ -661,6 +736,259 @@ body::after {
     }
 }
 
+/* LED 7-segment skin */
+html[data-skin="led"] .digital-clock-container .group-container .digit-item {
+    font-family: 'VT323', 'Courier New', monospace;
+    font-weight: 400;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 0.35rem;
+    text-shadow:
+        0 0 6px rgba(57, 255, 20, 0.85),
+        0 0 14px rgba(57, 255, 20, 0.55),
+        0 0 24px rgba(57, 255, 20, 0.3);
+}
+
+html[data-skin="led"] .clock-header-day,
+html[data-skin="led"] .clock-header-date,
+html[data-skin="led"] .clock-header-month,
+html[data-skin="led"] .clock-header-year {
+    font-family: 'VT323', 'Courier New', monospace;
+    text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
+}
+
+/* Flip-board skin */
+html[data-skin="flip"] .digital-clock-container .group-container .digit-item {
+    background:
+        linear-gradient(180deg,
+            #2c2520 0%,
+            #2c2520 49.5%,
+            #14100c 50%,
+            #1a1410 100%);
+    background-color: #2c2520;
+    color: #f5e6d3;
+    font-family: Georgia, 'Times New Roman', serif;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.4);
+}
+
+html[data-skin="flip"] .digital-clock-container .group-container .digit-item::before {
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0) 45%);
+}
+
+html[data-skin="flip"] .digital-clock-container .group-container .digit-item::after {
+    height: 2px;
+    background: rgba(0, 0, 0, 0.85);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Terminal skin */
+html[data-skin="terminal"] .digital-clock-container .group-container .digit-item {
+    background-color: transparent;
+    color: var(--fg);
+    border: 2px solid var(--fg);
+    border-radius: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-weight: 700;
+}
+
+html[data-skin="terminal"] .digital-clock-container .group-container .digit-item::before,
+html[data-skin="terminal"] .digital-clock-container .group-container .digit-item::after {
+    display: none;
+}
+
+html[data-skin="terminal"] .clock-header-day,
+html[data-skin="terminal"] .clock-header-date,
+html[data-skin="terminal"] .clock-header-month,
+html[data-skin="terminal"] .clock-header-year {
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+html[data-skin="terminal"] .digital-clock-container .separator-item {
+    border-radius: 0;
+}
+
+/* Burst particles (spawned on background click) */
+.burst-particle {
+    position: fixed;
+    width: var(--size, 8px);
+    height: var(--size, 8px);
+    background-color: var(--color, #fff);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1500;
+    transform: translate(-50%, -50%);
+    filter:
+        drop-shadow(0 0 4px var(--color, #fff))
+        drop-shadow(0 0 10px var(--color, #fff));
+    animation: burst 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
+}
+
+@keyframes burst {
+    0% {
+        transform: translate(-50%, -50%) scale(0.4);
+        opacity: 0;
+    }
+    15% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+    100% {
+        transform:
+            translate(calc(-50% + var(--dx, 0px)),
+                      calc(-50% + var(--dy, 0px)))
+            scale(0.25);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .burst-particle { display: none; }
+}
+
+/* Keyboard shortcuts overlay */
+.shortcuts-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: overlay-fade 0.2s ease-out;
+}
+
+.shortcuts-overlay[hidden] {
+    display: none;
+}
+
+.shortcuts-card {
+    position: relative;
+    background-color: var(--btn-bg);
+    color: var(--fg);
+    border: 1px solid var(--btn-border);
+    border-radius: 1.25rem;
+    padding: 2rem 2.25rem;
+    max-width: 32rem;
+    width: 100%;
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    box-shadow:
+        0 30px 60px -20px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 var(--digit-highlight);
+    animation: card-rise 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.shortcuts-card h2 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    color: var(--fg);
+}
+
+.shortcuts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.shortcuts-list > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.shortcuts-list dt {
+    display: flex;
+    gap: 0.3rem;
+    flex-shrink: 0;
+}
+
+.shortcuts-list dd {
+    font-size: 0.875rem;
+    color: var(--muted);
+    text-align: right;
+}
+
+.shortcuts-list kbd {
+    background-color: var(--btn-hover-bg);
+    border: 1px solid var(--btn-border);
+    border-radius: 0.35rem;
+    padding: 0.15rem 0.55rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--fg);
+    box-shadow: 0 2px 0 var(--btn-border);
+    min-width: 1.5rem;
+    text-align: center;
+}
+
+.shortcuts-hint {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--btn-border);
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.shortcuts-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background-color: transparent;
+    border: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--fg);
+    transition: background-color 0.2s ease;
+}
+
+.shortcuts-close:hover {
+    background-color: var(--btn-hover-bg);
+}
+
+@keyframes overlay-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes card-rise {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .shortcuts-overlay,
+    .shortcuts-card {
+        animation: none;
+    }
+}
+
 .digital-clock-container .group-container .digit-item::before {
     content: "";
     position: absolute;
@@ -823,8 +1151,23 @@ body::after {
     right: 7rem;
 }
 
-.github-btn {
+#skin-btn {
     right: 10rem;
+}
+
+#shortcuts-btn {
+    right: 13rem;
+}
+
+.github-btn {
+    right: 16rem;
+}
+
+@media (max-width: 720px) {
+    #shortcuts-btn,
+    .github-btn {
+        display: none;
+    }
 }
 
 .github-btn img {
@@ -886,6 +1229,35 @@ body::after {
     background-color: transparent;
     box-shadow: inset 0 0 0 1px var(--btn-fg);
     opacity: 0.55;
+}
+
+.skin-icon {
+    position: relative;
+    width: 1.2rem;
+    height: 1.2rem;
+    display: block;
+}
+
+.skin-icon span {
+    position: absolute;
+    width: 0.6rem;
+    height: 0.6rem;
+    border: 2px solid var(--btn-fg);
+    background-color: transparent;
+    border-radius: 0.15rem;
+    transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.skin-icon span:nth-child(1) { top: 0; left: 0; }
+.skin-icon span:nth-child(2) { top: 0.2rem; left: 0.2rem; opacity: 0.7; }
+.skin-icon span:nth-child(3) { top: 0.4rem; left: 0.4rem; opacity: 0.45; background-color: var(--btn-fg); }
+
+.shortcuts-icon {
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--btn-fg);
 }
 
 .theme-icon {

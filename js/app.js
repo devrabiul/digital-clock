@@ -328,14 +328,160 @@ setParticles(particlesEnabled());
 
 particlesBtn?.addEventListener('click', () => setParticles(!particlesEnabled()));
 
-// --- Click-to-spin easter egg on digit cards ---
+// --- Drag-to-spin + click-to-spin on digit cards ---
 
-document.querySelectorAll('.digit-item').forEach((digit) => {
-    digit.addEventListener('click', () => {
-        if (digit.classList.contains('spin')) return; // ignore mid-spin clicks
-        digit.classList.add('spin');
-        digit.addEventListener('animationend', () => digit.classList.remove('spin'), { once: true });
+const allDigits = document.querySelectorAll('.digit-item');
+let activeDrag = null;
+const DRAG_THRESHOLD = 5;        // pixels before a press is treated as a drag
+const DRAG_SCALE = 1.4;          // degrees of rotation per pixel of horizontal drag
+
+function clearDigitDrag(digit) {
+    digit.style.transition = '';
+    digit.style.transform = '';
+}
+
+allDigits.forEach((digit) => {
+    digit.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0 && event.pointerType === 'mouse') return;
+        activeDrag = {
+            digit,
+            startX: event.clientX,
+            rotation: 0,
+            moved: false,
+            pointerId: event.pointerId,
+        };
+        try { digit.setPointerCapture(event.pointerId); } catch (e) { }
+        digit.style.transition = 'none';
+        event.preventDefault();
     });
+
+    digit.addEventListener('pointermove', (event) => {
+        if (!activeDrag || activeDrag.digit !== digit) return;
+        const delta = event.clientX - activeDrag.startX;
+        if (!activeDrag.moved && Math.abs(delta) > DRAG_THRESHOLD) activeDrag.moved = true;
+        activeDrag.rotation = delta * DRAG_SCALE;
+        digit.style.transform = `perspective(500px) rotateY(${activeDrag.rotation}deg)`;
+    });
+
+    function endDrag(event) {
+        if (!activeDrag || activeDrag.digit !== digit) return;
+        const wasDrag = activeDrag.moved;
+        try { digit.releasePointerCapture(event.pointerId); } catch (e) { }
+        clearDigitDrag(digit);
+        activeDrag = null;
+        if (!wasDrag && !digit.classList.contains('spin')) {
+            digit.classList.add('spin');
+            digit.addEventListener('animationend', () => digit.classList.remove('spin'), { once: true });
+        }
+    }
+
+    digit.addEventListener('pointerup', endDrag);
+    digit.addEventListener('pointercancel', endDrag);
+});
+
+// --- Particle burst on background click ---
+
+const BURST_COLORS = [
+    '#ff6b9d', '#ffa45c', '#ffd166', '#06d6a0', '#4cc9f0', '#7209b7',
+    '#f72585', '#fb8500', '#00bbf9', '#c77dff', '#ff006e', '#ffbe0b',
+    '#8338ec', '#3a86ff', '#fb5607', '#80ed99'
+];
+
+function burstAt(x, y) {
+    const count = 9 + Math.floor(Math.random() * 4);
+    for (let i = 0; i < count; i++) {
+        const p = document.createElement('span');
+        p.className = 'burst-particle';
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+        const distance = 70 + Math.random() * 90;
+        const size = 6 + Math.random() * 8;
+        const color = BURST_COLORS[Math.floor(Math.random() * BURST_COLORS.length)];
+        p.style.setProperty('--dx', `${Math.cos(angle) * distance}px`);
+        p.style.setProperty('--dy', `${Math.sin(angle) * distance}px`);
+        p.style.setProperty('--size', `${size}px`);
+        p.style.setProperty('--color', color);
+        p.style.left = `${x}px`;
+        p.style.top = `${y}px`;
+        document.body.appendChild(p);
+        p.addEventListener('animationend', () => p.remove(), { once: true });
+    }
+}
+
+document.addEventListener('click', (event) => {
+    if (event.target.closest('button, a, input, .digit-item, .shortcuts-card')) return;
+    burstAt(event.clientX, event.clientY);
+});
+
+// --- Clock skin cycling ---
+
+const SKINS = ['glass', 'led', 'flip', 'terminal'];
+const skinBtn = document.getElementById('skin-btn');
+
+function getCurrentSkin() {
+    return document.documentElement.getAttribute('data-skin') || 'glass';
+}
+
+function setSkin(skin) {
+    if (!SKINS.includes(skin)) return;
+    if (skin === 'glass') {
+        document.documentElement.removeAttribute('data-skin');
+    } else {
+        document.documentElement.setAttribute('data-skin', skin);
+    }
+    try { localStorage.setItem('skin', skin); } catch (e) { }
+}
+
+skinBtn?.addEventListener('click', () => {
+    const current = getCurrentSkin();
+    const next = SKINS[(SKINS.indexOf(current) + 1) % SKINS.length];
+    setSkin(next);
+});
+
+// --- Keyboard shortcuts overlay ---
+
+const shortcutsOverlay = document.getElementById('shortcuts-overlay');
+const shortcutsClose = document.getElementById('shortcuts-close');
+const shortcutsBtn = document.getElementById('shortcuts-btn');
+
+function toggleShortcuts(show) {
+    if (!shortcutsOverlay) return;
+    const willShow = show !== undefined ? show : shortcutsOverlay.hasAttribute('hidden');
+    if (willShow) shortcutsOverlay.removeAttribute('hidden');
+    else shortcutsOverlay.setAttribute('hidden', '');
+}
+
+shortcutsBtn?.addEventListener('click', () => toggleShortcuts(true));
+shortcutsClose?.addEventListener('click', () => toggleShortcuts(false));
+shortcutsOverlay?.addEventListener('click', (event) => {
+    if (event.target === shortcutsOverlay) toggleShortcuts(false);
+});
+
+// --- Date-aware seasonal themes ---
+
+function detectSeason() {
+    const hashMatch = window.location.hash.match(/^#(halloween|christmas|nye|valentines)$/);
+    if (hashMatch) return hashMatch[1];
+
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+
+    if (month === 10 && day >= 28 && day <= 31) return 'halloween';
+    if (month === 12 && day >= 20 && day <= 26) return 'christmas';
+    if ((month === 12 && day === 31) || (month === 1 && day === 1)) return 'nye';
+    if (month === 2 && day >= 13 && day <= 14) return 'valentines';
+    return null;
+}
+
+const season = detectSeason();
+if (season) {
+    document.documentElement.setAttribute('data-season', season);
+}
+
+window.addEventListener('hashchange', () => {
+    const s = detectSeason();
+    if (s) document.documentElement.setAttribute('data-season', s);
+    else document.documentElement.removeAttribute('data-season');
 });
 
 // --- Keyboard shortcuts ---
@@ -343,6 +489,20 @@ document.querySelectorAll('.digit-item').forEach((digit) => {
 document.addEventListener('keydown', (event) => {
     const tag = event.target.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+    if (event.key === 'Escape') {
+        if (shortcutsOverlay && !shortcutsOverlay.hasAttribute('hidden')) {
+            event.preventDefault();
+            toggleShortcuts(false);
+        }
+        return;
+    }
+
+    if (event.key === '?' || (event.key === '/' && event.shiftKey)) {
+        event.preventDefault();
+        toggleShortcuts();
+        return;
+    }
 
     if (event.key === 'f' || event.key === 'F') {
         toggleFullScreen();
