@@ -30,6 +30,9 @@
                 if (t === 'dark' || t === 'light') {
                     document.documentElement.setAttribute('data-theme', t);
                 }
+                if (localStorage.getItem('particles') === 'off') {
+                    document.documentElement.setAttribute('data-particles', 'off');
+                }
             } catch (e) { }
         })();
     </script>
@@ -69,6 +72,14 @@
 
     <button id="theme-btn" class="action-btn" aria-label="Toggle light and dark theme">
         <span class="theme-icon"></span>
+    </button>
+
+    <button id="particles-btn" class="action-btn" aria-label="Toggle background particles" aria-pressed="true">
+        <span class="particles-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
     </button>
 
     <a class="action-btn github-btn" aria-label="github" href="https://github.com/devrabiul" target="_blank" rel="noopener">

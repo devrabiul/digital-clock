@@ -306,6 +306,38 @@ function toggleFullScreen() {
 
 document.getElementById('fullscreen-btn')?.addEventListener('click', toggleFullScreen);
 
+// --- Particle toggle (persisted) ---
+
+const particlesBtn = document.getElementById('particles-btn');
+
+function particlesEnabled() {
+    return document.documentElement.getAttribute('data-particles') !== 'off';
+}
+
+function setParticles(on) {
+    if (on) {
+        document.documentElement.removeAttribute('data-particles');
+    } else {
+        document.documentElement.setAttribute('data-particles', 'off');
+    }
+    try { localStorage.setItem('particles', on ? 'on' : 'off'); } catch (e) { }
+    if (particlesBtn) particlesBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+}
+
+setParticles(particlesEnabled());
+
+particlesBtn?.addEventListener('click', () => setParticles(!particlesEnabled()));
+
+// --- Click-to-spin easter egg on digit cards ---
+
+document.querySelectorAll('.digit-item').forEach((digit) => {
+    digit.addEventListener('click', () => {
+        if (digit.classList.contains('spin')) return; // ignore mid-spin clicks
+        digit.classList.add('spin');
+        digit.addEventListener('animationend', () => digit.classList.remove('spin'), { once: true });
+    });
+});
+
 // --- Keyboard shortcuts ---
 
 document.addEventListener('keydown', (event) => {
