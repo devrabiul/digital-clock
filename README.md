@@ -8,6 +8,18 @@ A simple digital clock built with [HTML, CSS, and JavaScript](https://developer.
 - Displays current time in a digital format (HH:MM:SS).
 - Automatically updates every second.
 - Customizable design using CSS.
+- Timer alerts in the background with a sound, a browser notification, and a countdown in the tab title.
+- Timer and stopwatch keep running through a page reload.
+- Keep-awake toggle that stops the screen sleeping (requires HTTPS or localhost).
+- Installable and works offline as a PWA (requires HTTPS or localhost, so not from `file://`).
+- Extras panel (press `E`):
+  - Daylight fill, minute particles, and timer pressure effects.
+  - Skin-matched ticking and a melody on the hour, built from the digits of the time.
+  - Moment catcher for lucky times like 12:34:56, plus your own special time.
+  - Digit Scrub Game (press `G`): spin the digits to the current time before the round ends.
+  - Heatmap of daily timer use, stored only on your device.
+- Together timer: the Share button copies a link that puts everyone on the same countdown. It relies on each device's clock being correct.
+- Wallpaper links for OBS, Notion, or wallpaper apps: `?embed=flip&theme=dark`. Add `&bg=transparent` for a see-through background or `&particles=off` to hide particles. Skins are `glass`, `led`, `flip`, and `terminal`.
 
 ## Installation
 
