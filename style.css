@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Share+Tech+Mono&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Barlow+Condensed:wght@500;600&family=JetBrains+Mono:wght@500;700&family=Chakra+Petch:wght@500;700&family=Share+Tech+Mono&display=swap');
 
 :root {
     color-scheme: light dark;
@@ -109,52 +109,6 @@
     --blob-2: rgba(220, 20, 60, 0.85);
     --blob-3: rgba(255, 192, 203, 0.85);
     --blob-4: rgba(255, 255, 255, 0.55);
-}
-
-/* Skin overrides — use html[data-skin] so they win over theme rules */
-html[data-skin="led"] {
-    --bg: #040804;
-    --fg: #39ff14;
-    --muted: rgba(57, 255, 20, 0.5);
-    --digit-bg: #0a0e0a;
-    --digit-fg: #39ff14;
-    --digit-border: rgba(57, 255, 20, 0.18);
-    --digit-highlight: transparent;
-    --digit-gloss: linear-gradient(180deg, rgba(57, 255, 20, 0.08) 0%, transparent 50%);
-    --digit-seam: rgba(57, 255, 20, 0.15);
-    --digit-shadow: 0 0 30px rgba(57, 255, 20, 0.25);
-    --separator: #39ff14;
-    --btn-bg: rgba(10, 14, 10, 0.6);
-    --btn-fg: #39ff14;
-    --btn-border: rgba(57, 255, 20, 0.25);
-    --btn-hover-bg: rgba(57, 255, 20, 0.15);
-}
-
-html[data-skin="flip"] {
-    --bg: #1a1410;
-    --fg: #f5e6d3;
-    --muted: rgba(245, 230, 211, 0.55);
-    --digit-fg: #f5e6d3;
-    --digit-border: rgba(0, 0, 0, 0.6);
-    --digit-highlight: rgba(255, 255, 255, 0.04);
-    --digit-gloss: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
-    --digit-seam: rgba(0, 0, 0, 0.85);
-    --digit-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    --separator: #f5e6d3;
-    --btn-bg: rgba(44, 37, 32, 0.7);
-    --btn-fg: #f5e6d3;
-    --btn-border: rgba(245, 230, 211, 0.2);
-    --btn-hover-bg: rgba(245, 230, 211, 0.15);
-}
-
-html[data-skin="terminal"] {
-    --digit-bg: transparent;
-    --digit-border: var(--fg);
-    --digit-highlight: transparent;
-    --digit-gloss: none;
-    --digit-seam: transparent;
-    --digit-shadow: none;
-    --separator: var(--fg);
 }
 
 * {
@@ -717,90 +671,6 @@ body::after {
     }
 }
 
-/* LED 7-segment skin */
-html[data-skin="led"] .digital-clock-container .group-container .digit-item {
-    font-family: 'VT323', 'Courier New', monospace;
-    font-weight: 400;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-radius: 0.35rem;
-    text-shadow:
-        0 0 6px rgba(57, 255, 20, 0.85),
-        0 0 14px rgba(57, 255, 20, 0.55),
-        0 0 24px rgba(57, 255, 20, 0.3);
-}
-
-html[data-skin="led"] .clock-header-day,
-html[data-skin="led"] .clock-header-date,
-html[data-skin="led"] .clock-header-month,
-html[data-skin="led"] .clock-header-year {
-    font-family: 'VT323', 'Courier New', monospace;
-    text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
-}
-
-/* Flip-board skin */
-html[data-skin="flip"] .digital-clock-container .group-container .digit-item {
-    background:
-        linear-gradient(180deg,
-            #2c2520 0%,
-            #2c2520 49.5%,
-            #14100c 50%,
-            #1a1410 100%);
-    background-color: #2c2520;
-    color: #f5e6d3;
-    font-family: Georgia, 'Times New Roman', serif;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.6);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    box-shadow:
-        0 25px 50px -12px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06),
-        inset 0 -2px 6px rgba(0, 0, 0, 0.4);
-}
-
-html[data-skin="flip"] .digital-clock-container .group-container .digit-item::before {
-    background: linear-gradient(180deg,
-        rgba(255, 255, 255, 0.08) 0%,
-        rgba(255, 255, 255, 0) 45%);
-}
-
-html[data-skin="flip"] .digital-clock-container .group-container .digit-item::after {
-    height: 2px;
-    background: rgba(0, 0, 0, 0.85);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-/* Terminal skin */
-html[data-skin="terminal"] .digital-clock-container .group-container .digit-item {
-    background-color: transparent;
-    color: var(--fg);
-    border: 2px solid var(--fg);
-    border-radius: 0;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    box-shadow: none;
-    font-family: 'Share Tech Mono', 'Courier New', monospace;
-    font-weight: 700;
-}
-
-html[data-skin="terminal"] .digital-clock-container .group-container .digit-item::before,
-html[data-skin="terminal"] .digital-clock-container .group-container .digit-item::after {
-    display: none;
-}
-
-html[data-skin="terminal"] .clock-header-day,
-html[data-skin="terminal"] .clock-header-date,
-html[data-skin="terminal"] .clock-header-month,
-html[data-skin="terminal"] .clock-header-year {
-    font-family: 'Share Tech Mono', 'Courier New', monospace;
-}
-
-html[data-skin="terminal"] .digital-clock-container .separator-item {
-    border-radius: 0;
-}
-
 /* Burst particles (spawned on background click) */
 .burst-particle {
     position: fixed;
@@ -1136,10 +1006,18 @@ html[data-skin="terminal"] .digital-clock-container .separator-item {
     right: 16rem;
 }
 
+#wake-btn {
+    right: 19rem;
+}
+
 @media (max-width: 720px) {
     #shortcuts-btn,
     .github-btn {
         display: none;
+    }
+
+    #wake-btn {
+        right: 13rem;
     }
 }
 
@@ -1231,6 +1109,25 @@ html[data-skin="terminal"] .digital-clock-container .separator-item {
     font-size: 1.15rem;
     line-height: 1;
     color: var(--btn-fg);
+}
+
+.wake-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: block;
+    fill: none;
+    stroke: var(--btn-fg);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#wake-btn[aria-pressed="true"] .wake-icon circle {
+    fill: var(--btn-fg);
+}
+
+#wake-btn[aria-pressed="true"] .wake-icon line {
+    display: none;
 }
 
 .theme-icon {
@@ -1496,5 +1393,692 @@ button {
     .preset-btn,
     .adjust-btn {
         min-height: 2.25rem;
+    }
+}
+
+/* Clock skins. Each one has a light and a dark variant, driven by the theme toggle. */
+html[data-skin] .particle,
+html[data-skin] .burst-particle {
+    --color: var(--skin-particle) !important;
+}
+
+html[data-skin] .particle {
+    filter: none;
+}
+
+html[data-skin] .action-btn,
+html[data-skin] .mode-switcher,
+html[data-skin] .clock-controls,
+html[data-skin] .control-btn,
+html[data-skin] .preset-btn {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+}
+
+html[data-skin] .mode-btn.active,
+html[data-skin] .control-btn.primary,
+html[data-skin] .preset-btn.active {
+    background-color: var(--skin-accent);
+    color: var(--skin-accent-fg);
+    border-color: var(--skin-accent);
+}
+
+html[data-skin] .shortcuts-card {
+    background-color: var(--bg);
+}
+
+/* LED: red alarm clock display in dark, LCD in light. Flat type, no glow. */
+html[data-skin="led"] {
+    --digit-gloss: none;
+    --digit-highlight: transparent;
+    --digit-seam: transparent;
+    --blob-opacity: 0;
+    --bg: #d3d6c8;
+    --fg: #20261b;
+    --muted: #4f5745;
+    --digit-bg: transparent;
+    --digit-fg: #1c2217;
+    --digit-border: transparent;
+    --digit-shadow: none;
+    --separator: #1c2217;
+    --btn-bg: #e3e5da;
+    --btn-fg: #20261b;
+    --btn-border: rgba(32, 38, 27, 0.3);
+    --btn-hover-bg: #d3d6c8;
+    --skin-accent: #20261b;
+    --skin-accent-fg: #e3e5da;
+    --skin-particle: rgba(32, 38, 27, 0.35);
+    --led-panel: linear-gradient(180deg, #b4c09f 0%, #bdc8a8 100%);
+    --led-bezel: #7c8869;
+    --led-bezel-shadow: 0 18px 40px -18px rgba(32, 38, 27, 0.55), inset 0 2px 6px rgba(32, 38, 27, 0.3);
+}
+
+html[data-skin="led"][data-theme="dark"] {
+    --digit-gloss: none;
+    --digit-highlight: transparent;
+    --digit-seam: transparent;
+    --blob-opacity: 0;
+    --bg: #070404;
+    --fg: #ff4b38;
+    --muted: #c0675a;
+    --digit-bg: transparent;
+    --digit-fg: #ff3b2a;
+    --digit-border: transparent;
+    --digit-shadow: none;
+    --separator: #ff3b2a;
+    --btn-bg: #1a0b09;
+    --btn-fg: #ff6a58;
+    --btn-border: rgba(255, 75, 56, 0.3);
+    --btn-hover-bg: #2b1210;
+    --skin-accent: #ff3b2a;
+    --skin-accent-fg: #160403;
+    --skin-particle: rgba(255, 59, 42, 0.4);
+    --led-panel: linear-gradient(180deg, #0e0505 0%, #150707 100%);
+    --led-bezel: #2a1412;
+    --led-bezel-shadow: 0 25px 60px -20px rgba(255, 59, 42, 0.28), inset 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+@media (prefers-color-scheme: dark) {
+    html[data-skin="led"]:not([data-theme="light"]) {
+        --digit-gloss: none;
+        --digit-highlight: transparent;
+        --digit-seam: transparent;
+        --blob-opacity: 0;
+        --bg: #070404;
+        --fg: #ff4b38;
+        --muted: #c0675a;
+        --digit-bg: transparent;
+        --digit-fg: #ff3b2a;
+        --digit-border: transparent;
+        --digit-shadow: none;
+        --separator: #ff3b2a;
+        --btn-bg: #1a0b09;
+        --btn-fg: #ff6a58;
+        --btn-border: rgba(255, 75, 56, 0.3);
+        --btn-hover-bg: #2b1210;
+        --skin-accent: #ff3b2a;
+        --skin-accent-fg: #160403;
+        --skin-particle: rgba(255, 59, 42, 0.4);
+        --led-panel: linear-gradient(180deg, #0e0505 0%, #150707 100%);
+        --led-bezel: #2a1412;
+        --led-bezel-shadow: 0 25px 60px -20px rgba(255, 59, 42, 0.28), inset 0 2px 10px rgba(0, 0, 0, 0.9);
+    }
+}
+
+html[data-skin="led"] .digital-clock-container {
+    --digit-font: calc(var(--digit-size) * 0.95);
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+    padding: clamp(0.75rem, 2.2vw, 2rem) clamp(0.75rem, 2.5vw, 2.5rem) clamp(0.25rem, 1vw, 0.75rem);
+    background: var(--led-panel);
+    border: 2px solid var(--led-bezel);
+    border-radius: clamp(0.5rem, 1vw, 1rem);
+    box-shadow: var(--led-bezel-shadow);
+}
+
+html[data-skin="led"] .digital-clock-container .group-container .digit-item {
+    font-family: 'Chakra Petch', 'Arial', sans-serif;
+    font-weight: 700;
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+html[data-skin="led"] .digital-clock-container .group-container .digit-item::before,
+html[data-skin="led"] .digital-clock-container .group-container .digit-item::after {
+    display: none;
+}
+
+html[data-skin="led"] .digital-clock-container .separator-item {
+    border-radius: 0.1rem;
+    animation: skin-colon-blink 1s steps(1) infinite;
+}
+
+html[data-skin="led"] .clock-header-day,
+html[data-skin="led"] .clock-header-date,
+html[data-skin="led"] .clock-header-month,
+html[data-skin="led"] .clock-header-year {
+    font-family: 'Chakra Petch', 'Arial', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--fg);
+}
+
+html[data-skin="led"] .clock-header-day {
+    font-size: clamp(1rem, 2.4vw, 1.6rem);
+}
+
+html[data-skin="led"] .clock-header-date,
+html[data-skin="led"] .clock-header-month,
+html[data-skin="led"] .clock-header-year {
+    font-size: clamp(0.9rem, 1.8vw, 1.25rem);
+}
+
+html[data-skin="led"] .mode-switcher,
+html[data-skin="led"] .clock-controls,
+html[data-skin="led"] .action-btn,
+html[data-skin="led"] .mode-btn,
+html[data-skin="led"] .control-btn,
+html[data-skin="led"] .preset-btn,
+html[data-skin="led"] .adjust-btn {
+    border-radius: 0.3rem;
+}
+
+/* Flip: departures board in dark, retro flip clock in light */
+html[data-skin="flip"] {
+    --digit-gloss: none;
+    --digit-highlight: transparent;
+    --digit-seam: transparent;
+    --blob-opacity: 0;
+    --bg: #e6e1d6;
+    --fg: #1f1d1a;
+    --muted: #6d665a;
+    --digit-bg: #fbf8f1;
+    --digit-fg: #1f1d1a;
+    --digit-border: rgba(31, 29, 26, 0.16);
+    --digit-shadow: 0 14px 26px -12px rgba(31, 29, 26, 0.45);
+    --separator: #b5432a;
+    --btn-bg: #f6f2e9;
+    --btn-fg: #1f1d1a;
+    --btn-border: rgba(31, 29, 26, 0.2);
+    --btn-hover-bg: #ebe6da;
+    --skin-accent: #b5432a;
+    --skin-accent-fg: #fbf8f1;
+    --skin-particle: rgba(181, 67, 42, 0.35);
+    --skin-label: #a33b24;
+    --flap-top: #fdfbf6;
+    --flap-bottom: #f3efe5;
+    --flap-seam: rgba(31, 29, 26, 0.5);
+    --flap-hinge: #b9b3a6;
+}
+
+html[data-skin="flip"][data-theme="dark"] {
+    --digit-gloss: none;
+    --digit-highlight: transparent;
+    --digit-seam: transparent;
+    --blob-opacity: 0;
+    --bg: #0d0e10;
+    --fg: #f4f1e8;
+    --muted: #9a978e;
+    --digit-bg: #1c1e22;
+    --digit-fg: #f4f1e8;
+    --digit-border: rgba(0, 0, 0, 0.8);
+    --digit-shadow: 0 18px 30px -12px rgba(0, 0, 0, 0.9);
+    --separator: #f2c230;
+    --btn-bg: #1c1e22;
+    --btn-fg: #f4f1e8;
+    --btn-border: rgba(244, 241, 232, 0.14);
+    --btn-hover-bg: #2a2d32;
+    --skin-accent: #f2c230;
+    --skin-accent-fg: #14130f;
+    --skin-particle: rgba(242, 194, 48, 0.28);
+    --skin-label: #f2c230;
+    --flap-top: #212328;
+    --flap-bottom: #191b1f;
+    --flap-seam: #000;
+    --flap-hinge: #3a3d43;
+}
+
+@media (prefers-color-scheme: dark) {
+    html[data-skin="flip"]:not([data-theme="light"]) {
+        --digit-gloss: none;
+        --digit-highlight: transparent;
+        --digit-seam: transparent;
+        --blob-opacity: 0;
+        --bg: #0d0e10;
+        --fg: #f4f1e8;
+        --muted: #9a978e;
+        --digit-bg: #1c1e22;
+        --digit-fg: #f4f1e8;
+        --digit-border: rgba(0, 0, 0, 0.8);
+        --digit-shadow: 0 18px 30px -12px rgba(0, 0, 0, 0.9);
+        --separator: #f2c230;
+        --btn-bg: #1c1e22;
+        --btn-fg: #f4f1e8;
+        --btn-border: rgba(244, 241, 232, 0.14);
+        --btn-hover-bg: #2a2d32;
+        --skin-accent: #f2c230;
+        --skin-accent-fg: #14130f;
+        --skin-particle: rgba(242, 194, 48, 0.28);
+        --skin-label: #f2c230;
+        --flap-top: #212328;
+        --flap-bottom: #191b1f;
+        --flap-seam: #000;
+        --flap-hinge: #3a3d43;
+    }
+}
+
+html[data-skin="flip"] .digital-clock-container .group-container {
+    gap: clamp(0.2rem, 0.5vw, 0.4rem);
+}
+
+html[data-skin="flip"] .digital-clock-container .group-container .digit-item {
+    --digit-font: calc(var(--digit-size) * 0.92);
+    font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    font-weight: 600;
+    background:
+        linear-gradient(var(--flap-hinge), var(--flap-hinge)) left center / 3px 12% no-repeat,
+        linear-gradient(var(--flap-hinge), var(--flap-hinge)) right center / 3px 12% no-repeat,
+        linear-gradient(var(--flap-seam), var(--flap-seam)) center / 100% 2px no-repeat,
+        linear-gradient(180deg, var(--flap-top) 50%, var(--flap-bottom) 50%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: clamp(0.3rem, 0.6vw, 0.55rem);
+}
+
+html[data-skin="flip"] .digital-clock-container .group-container .digit-item::before,
+html[data-skin="flip"] .digital-clock-container .group-container .digit-item::after {
+    display: none;
+}
+
+html[data-skin="flip"] .digital-clock-container .digit-item-type {
+    color: var(--skin-label);
+    font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    font-weight: 600;
+}
+
+html[data-skin="flip"] .digital-clock-container .separator-item {
+    border-radius: 0.1rem;
+    animation: none;
+    opacity: 1;
+}
+
+html[data-skin="flip"] .clock-header-day,
+html[data-skin="flip"] .clock-header-date,
+html[data-skin="flip"] .clock-header-month,
+html[data-skin="flip"] .clock-header-year,
+html[data-skin="flip"] .mode-btn,
+html[data-skin="flip"] .control-btn,
+html[data-skin="flip"] .preset-btn,
+html[data-skin="flip"] .adjust-btn {
+    font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    font-weight: 600;
+}
+
+html[data-skin="flip"] .clock-header-day {
+    font-weight: 500;
+}
+
+html[data-skin="flip"] .clock-header-month {
+    color: var(--skin-label);
+}
+
+html[data-skin="flip"] .mode-btn,
+html[data-skin="flip"] .control-btn,
+html[data-skin="flip"] .preset-btn {
+    font-size: 1rem;
+}
+
+html[data-skin="flip"] .mode-switcher,
+html[data-skin="flip"] .clock-controls,
+html[data-skin="flip"] .action-btn,
+html[data-skin="flip"] .mode-btn,
+html[data-skin="flip"] .control-btn,
+html[data-skin="flip"] .preset-btn,
+html[data-skin="flip"] .adjust-btn {
+    border-radius: 0.35rem;
+}
+
+/* Split-flap: old top falls, new bottom lands over the old bottom. Spans are added by setGroupDigits. */
+.flap {
+    display: none;
+    pointer-events: none;
+}
+
+html[data-skin="flip"] .flap {
+    display: block;
+}
+
+.flap::before,
+.flap::after {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+    backface-visibility: hidden;
+}
+
+.flap-old::before {
+    content: attr(data-value);
+    z-index: 3;
+    background: var(--flap-top);
+    clip-path: inset(0 0 50% 0);
+    transform-origin: 50% 50%;
+    animation: flap-fall 0.22s ease-in forwards;
+}
+
+.flap-old::after {
+    content: attr(data-value);
+    z-index: 1;
+    background: var(--flap-bottom);
+    clip-path: inset(50% 0 0 0);
+}
+
+.flap-new::after {
+    content: attr(data-value);
+    z-index: 2;
+    background: var(--flap-bottom);
+    clip-path: inset(50% 0 0 0);
+    transform-origin: 50% 50%;
+    animation: flap-land 0.22s 0.22s ease-out backwards;
+}
+
+@keyframes flap-fall {
+    from { transform: perspective(400px) rotateX(0deg); }
+    to   { transform: perspective(400px) rotateX(-90deg); filter: brightness(0.6); }
+}
+
+@keyframes flap-land {
+    from { transform: perspective(400px) rotateX(90deg); filter: brightness(0.6); }
+    to   { transform: perspective(400px) rotateX(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-skin="flip"] .flap {
+        display: none;
+    }
+}
+
+/* Terminal: the whole clock becomes a console window */
+html[data-skin="terminal"] {
+    --digit-gloss: none;
+    --digit-highlight: transparent;
+    --digit-seam: transparent;
+    --blob-opacity: 0;
+    --bg: #e4dcc6;
+    --fg: #23412f;
+    --muted: #5c6f60;
+    --digit-bg: transparent;
+    --digit-fg: #1d3a29;
+    --digit-border: transparent;
+    --digit-shadow: none;
+    --separator: #1d3a29;
+    --btn-bg: #f7f0dc;
+    --btn-fg: #23412f;
+    --btn-border: rgba(35, 65, 47, 0.45);
+    --btn-hover-bg: #e9e0c8;
+    --skin-accent: #23412f;
+    --skin-accent-fg: #f7f0dc;
+    --skin-particle: rgba(35, 65, 47, 0.28);
+    --term-window: #fbf5e4;
+    --term-bar: #ece4cd;
+    --term-border: rgba(35, 65, 47, 0.45);
+    --term-shadow: 0 24px 50px -24px rgba(35, 65, 47, 0.55);
+}
+
+html[data-skin="terminal"][data-theme="dark"] {
+    --digit-gloss: none;
+    --digit-highlight: transparent;
+    --digit-seam: transparent;
+    --blob-opacity: 0;
+    --bg: #040805;
+    --fg: #57f287;
+    --muted: #46ad6b;
+    --digit-bg: transparent;
+    --digit-fg: #5dff90;
+    --digit-border: transparent;
+    --digit-shadow: none;
+    --separator: #5dff90;
+    --btn-bg: #0a160e;
+    --btn-fg: #57f287;
+    --btn-border: rgba(87, 242, 135, 0.4);
+    --btn-hover-bg: #123020;
+    --skin-accent: #57f287;
+    --skin-accent-fg: #04100a;
+    --skin-particle: rgba(87, 242, 135, 0.3);
+    --term-window: #07110b;
+    --term-bar: #0d1d13;
+    --term-border: rgba(87, 242, 135, 0.4);
+    --term-shadow: 0 0 60px -12px rgba(87, 242, 135, 0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+    html[data-skin="terminal"]:not([data-theme="light"]) {
+        --digit-gloss: none;
+        --digit-highlight: transparent;
+        --digit-seam: transparent;
+        --blob-opacity: 0;
+        --bg: #040805;
+        --fg: #57f287;
+        --muted: #46ad6b;
+        --digit-bg: transparent;
+        --digit-fg: #5dff90;
+        --digit-border: transparent;
+        --digit-shadow: none;
+        --separator: #5dff90;
+        --btn-bg: #0a160e;
+        --btn-fg: #57f287;
+        --btn-border: rgba(87, 242, 135, 0.4);
+        --btn-hover-bg: #123020;
+        --skin-accent: #57f287;
+        --skin-accent-fg: #04100a;
+        --skin-particle: rgba(87, 242, 135, 0.3);
+        --term-window: #07110b;
+        --term-bar: #0d1d13;
+        --term-border: rgba(87, 242, 135, 0.4);
+        --term-shadow: 0 0 60px -12px rgba(87, 242, 135, 0.25);
+    }
+}
+
+html[data-skin="terminal"] .root-container {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+    padding: 3rem clamp(1rem, 3vw, 2.5rem) 1rem;
+    background-color: var(--term-window);
+    border: 1px solid var(--term-border);
+    border-radius: 0.5rem;
+    box-shadow: var(--term-shadow);
+}
+
+html[data-skin="terminal"] .root-container::before {
+    content: "\25CF \25CF \25CF    clock \2014  zsh";
+    white-space: pre;
+    position: absolute;
+    inset: 0 0 auto;
+    padding: 0.45rem 0.85rem;
+    background-color: var(--term-bar);
+    border-bottom: 1px solid var(--term-border);
+    border-radius: 0.5rem 0.5rem 0 0;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+html[data-skin="terminal"] .root-container[data-mode="stopwatch"]::before {
+    content: "\25CF \25CF \25CF    stopwatch \2014  zsh";
+}
+
+html[data-skin="terminal"] .root-container[data-mode="timer"]::before {
+    content: "\25CF \25CF \25CF    timer \2014  zsh";
+}
+
+html[data-skin="terminal"] .digital-clock-container {
+    --digit-font: var(--digit-size);
+    gap: clamp(0.25rem, 1vw, 0.75rem);
+}
+
+html[data-skin="terminal"] .digital-clock-container .group-container {
+    gap: 0;
+}
+
+html[data-skin="terminal"] .digital-clock-container .group-container .digit-item {
+    width: calc(var(--digit-size) * 0.62);
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-weight: 700;
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+html[data-skin="terminal"] .digital-clock-container .group-container .digit-item::before,
+html[data-skin="terminal"] .digital-clock-container .group-container .digit-item::after {
+    display: none;
+}
+
+html[data-skin="terminal"] .digital-clock-container .separator-item {
+    border-radius: 0;
+    box-shadow: none;
+    animation: skin-colon-blink 1s steps(1) infinite;
+}
+
+html[data-skin="terminal"] .digit-item-type {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: lowercase;
+}
+
+html[data-skin="terminal"] .clock-header-container {
+    justify-content: flex-start;
+}
+
+html[data-skin="terminal"] .clock-header-day,
+html[data-skin="terminal"] .clock-header-date,
+html[data-skin="terminal"] .clock-header-month,
+html[data-skin="terminal"] .clock-header-year {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    text-transform: lowercase;
+    color: var(--fg);
+}
+
+html[data-skin="terminal"] .clock-header-day::before {
+    content: "$ ";
+    white-space: pre;
+    color: var(--muted);
+}
+
+html[data-skin="terminal"] .clock-header-date::before {
+    content: "> ";
+    white-space: pre;
+    color: var(--muted);
+}
+
+html[data-skin="terminal"] .clock-bottom-header::after {
+    content: "";
+    align-self: center;
+    width: 0.55rem;
+    height: 1.1rem;
+    margin-left: -0.25rem;
+    background-color: var(--fg);
+    animation: skin-colon-blink 1.1s steps(1) infinite;
+}
+
+html[data-skin="terminal"] .mode-btn,
+html[data-skin="terminal"] .control-btn,
+html[data-skin="terminal"] .preset-btn,
+html[data-skin="terminal"] .adjust-btn,
+html[data-skin="terminal"] .adjuster-label,
+html[data-skin="terminal"] .shortcuts-card {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-weight: 500;
+}
+
+html[data-skin="terminal"] .mode-switcher,
+html[data-skin="terminal"] .clock-controls,
+html[data-skin="terminal"] .action-btn,
+html[data-skin="terminal"] .mode-btn,
+html[data-skin="terminal"] .control-btn,
+html[data-skin="terminal"] .preset-btn,
+html[data-skin="terminal"] .adjust-btn,
+html[data-skin="terminal"] .shortcuts-card {
+    border-radius: 0;
+}
+
+/* LED and terminal digits have no card, so the timer-done flash needs to blink the text instead */
+html[data-skin="led"] .root-container.timer-complete .digital-clock-container .digit-item,
+html[data-skin="terminal"] .root-container.timer-complete .digital-clock-container .digit-item {
+    animation: skin-text-blink 0.55s steps(1) 5;
+}
+
+@keyframes skin-colon-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0.2; }
+}
+
+@keyframes skin-text-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0.15; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-skin="led"] .digital-clock-container .separator-item,
+    html[data-skin="terminal"] .digital-clock-container .separator-item,
+    html[data-skin="terminal"] .clock-bottom-header::after,
+    html[data-skin="led"] .root-container.timer-complete .digital-clock-container .digit-item,
+    html[data-skin="terminal"] .root-container.timer-complete .digital-clock-container .digit-item {
+        animation: none;
+    }
+}
+
+/* Skins that add a frame give up a little digit size on small screens so it still fits */
+@media (max-width: 960px), (max-height: 640px) {
+    html[data-skin="led"] .digital-clock-container {
+        padding: 0.75rem 0.75rem 0.25rem;
+    }
+
+    html[data-skin="terminal"] .root-container {
+        padding: 2.5rem 0.75rem 0.75rem;
+    }
+
+    html[data-skin="terminal"] .clock-controls {
+        margin-top: 0.5rem;
+    }
+}
+
+@media (max-width: 560px) {
+    html[data-skin="led"] .digital-clock-container {
+        --digit-size: min(20vw, 13vh);
+        padding-inline: 0.5rem;
+        row-gap: 0.85rem;
+    }
+
+    html[data-skin="led"] .root-container[data-mode="timer"] .digital-clock-container {
+        --digit-size: 12.5vw;
+    }
+
+    html[data-skin="terminal"] .root-container {
+        width: 100%;
+    }
+
+    html[data-skin="terminal"] .clock-controls {
+        padding-inline: 0.5rem;
+    }
+
+    html[data-skin="terminal"] .digital-clock-container {
+        --digit-size: min(26vw, 13vh);
+        row-gap: 0.85rem;
+    }
+
+    html[data-skin="terminal"] .root-container[data-mode="timer"] .digital-clock-container {
+        --digit-size: 18vw;
+    }
+}
+
+@media (max-height: 500px) and (min-width: 561px) {
+    html[data-skin="led"] .digital-clock-container {
+        --digit-size: clamp(2.5rem, min(9.5vw, 21vh), 10rem);
+        padding: 0.5rem 0.75rem 0.1rem;
+    }
+
+    html[data-skin="terminal"] .root-container {
+        width: 100%;
+        padding: 2.1rem 0.75rem 0.4rem;
+    }
+
+    html[data-skin="terminal"] .root-container::before {
+        padding-block: 0.2rem;
+    }
+
+    html[data-skin="terminal"] .digital-clock-container {
+        --digit-size: clamp(2.5rem, min(9.5vw, 21vh), 10rem);
     }
 }

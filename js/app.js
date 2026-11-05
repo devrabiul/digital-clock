@@ -22,24 +22,41 @@ const labels = {
     ampm: groups.ampm.querySelector('.digit-item-type'),
 };
 
+// Running stopwatch/timer are wall-clock timestamps so they survive reloads and hidden tabs
 const state = {
     mode: 'clock',
     stopwatch: { elapsed: 0, running: false, lastStart: 0 },
-    timer: { duration: 5 * 60 * 1000, remaining: 5 * 60 * 1000, running: false, lastStart: 0 },
+    timer: { duration: 5 * 60 * 1000, remaining: 5 * 60 * 1000, running: false, endsAt: 0 },
 };
 
 function pad(n) {
     return String(Math.max(0, Math.floor(n))).padStart(2, '0');
 }
 
+// Empty spans whose pseudo-elements draw the split-flap; textContent stays just the digit
+function addFlap(digit, prev, next) {
+    if (document.documentElement.getAttribute('data-skin') !== 'flip') return;
+    const flaps = [['flap-old', prev], ['flap-new', next]].map(([name, value]) => {
+        const flap = document.createElement('span');
+        flap.className = `flap ${name}`;
+        flap.dataset.value = value;
+        return flap;
+    });
+    digit.append(...flaps);
+    setTimeout(() => flaps.forEach((flap) => flap.remove()), 500);
+}
+
 function setGroupDigits(type, value) {
     const digits = groups[type].querySelectorAll('.digit-item');
     digits.forEach((digit, i) => {
         const ch = value[i] ?? '';
-        if (digit.textContent !== ch) {
+        const prev = digit.textContent;
+        if (prev !== ch) {
             digit.classList.add('flipped');
             setTimeout(() => digit.classList.remove('flipped'), 600);
             digit.textContent = ch;
+            // Hundredths change every frame, too fast for a flap to ever land
+            if (!(type === 'ampm' && state.mode === 'stopwatch')) addFlap(digit, prev, ch);
         }
     });
 }
@@ -81,7 +98,7 @@ function splitMs(ms) {
 
 function renderStopwatch() {
     const elapsed = state.stopwatch.running
-        ? state.stopwatch.elapsed + (performance.now() - state.stopwatch.lastStart)
+        ? state.stopwatch.elapsed + (Date.now() - state.stopwatch.lastStart)
         : state.stopwatch.elapsed;
     const { hours, minutes, seconds, centi } = splitMs(elapsed);
 
@@ -96,18 +113,12 @@ function renderStopwatch() {
     labels.ampm.textContent = '1/100s';
 }
 
+function timerRemaining() {
+    return state.timer.running ? state.timer.endsAt - Date.now() : state.timer.remaining;
+}
+
 function renderTimer() {
-    let remaining = state.timer.remaining;
-    if (state.timer.running) {
-        remaining = state.timer.remaining - (performance.now() - state.timer.lastStart);
-        if (remaining <= 0) {
-            remaining = 0;
-            state.timer.running = false;
-            state.timer.remaining = 0;
-            onTimerComplete();
-        }
-    }
-    const { hours, minutes, seconds } = splitMs(remaining);
+    const { hours, minutes, seconds } = splitMs(timerRemaining());
 
     setGroupDigits('hour', pad(hours));
     setGroupDigits('minute', pad(minutes));
@@ -118,13 +129,40 @@ function renderTimer() {
     labels.second.textContent = 'Sec';
 }
 
-// --- Timer completion: beep + flash ---
+// --- Saved state + tab title ---
+
+const STATE_KEY = 'clockState';
+const BASE_TITLE = document.title;
+let timerDoneUnseen = false;
+
+function updateTitle() {
+    let title = BASE_TITLE;
+    if (timerDoneUnseen) {
+        title = `Time's up! - ${BASE_TITLE}`;
+    } else if (state.timer.running) {
+        const { hours, minutes, seconds } = splitMs(timerRemaining());
+        const time = `${hours > 0 ? `${pad(hours)}:` : ''}${pad(minutes)}:${pad(seconds)}`;
+        title = `${time} - Timer`;
+    }
+    if (document.title !== title) document.title = title;
+}
+
+function commitState() {
+    try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (e) { }
+    updateTitle();
+}
+
+// --- Timer completion: beep + flash + notification ---
 
 let audioCtx;
+function unlockAudio() {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
 function playBeep() {
     try {
-        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+        unlockAudio();
         [0, 0.3, 0.6, 0.9].forEach((t) => {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
@@ -142,18 +180,61 @@ function playBeep() {
     } catch (e) { /* audio not available */ }
 }
 
-function onTimerComplete() {
+function flashTimerComplete() {
     root.classList.add('timer-complete');
+    setTimeout(() => root.classList.remove('timer-complete'), 3000);
+}
+
+function requestTimerNotifications() {
+    if (!('Notification' in window) || Notification.permission !== 'default') return;
+    try { Notification.requestPermission(); } catch (e) { }
+}
+
+async function notifyTimerDone() {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    const options = { body: 'Your timer has finished.', icon: 'icons/icon-192.png', tag: 'timer-complete' };
+    try {
+        // Android only allows notifications through a service worker
+        if (swRegistration?.active) {
+            await swRegistration.showNotification("Time's up!", options);
+        } else {
+            const notification = new Notification("Time's up!", options);
+            notification.onclick = () => { window.focus(); notification.close(); };
+        }
+    } catch (e) { /* notifications not available */ }
+}
+
+function onTimerComplete() {
     root.classList.remove('timer-running');
     playBeep();
     tmToggle.textContent = 'Start';
-    setTimeout(() => root.classList.remove('timer-complete'), 3000);
+    if (document.hidden) {
+        timerDoneUnseen = true;
+        notifyTimerDone();
+    } else {
+        flashTimerComplete();
+    }
+    commitState();
+}
+
+function checkTimer() {
+    if (!state.timer.running || timerRemaining() > 0) return;
+    state.timer.running = false;
+    state.timer.remaining = 0;
+    onTimerComplete();
 }
 
 // --- rAF loop ---
 
+function renderCurrentMode() {
+    if (state.mode === 'clock') renderClock();
+    else if (state.mode === 'stopwatch') renderStopwatch();
+    else if (state.mode === 'timer') renderTimer();
+}
+
 let lastClockRender = 0;
 function tick(now) {
+    checkTimer();
     if (state.mode === 'clock') {
         if (now - lastClockRender > 250) {
             renderClock();
@@ -168,6 +249,31 @@ function tick(now) {
 }
 requestAnimationFrame(tick);
 
+// --- Background tick ---
+
+// rAF stops in hidden tabs and page timers get throttled to once a minute; worker timers don't
+function backgroundTick() {
+    checkTimer();
+    updateTitle();
+}
+
+try {
+    const source = 'setInterval(() => postMessage(0), 250);';
+    new Worker(URL.createObjectURL(new Blob([source]))).onmessage = backgroundTick;
+} catch (e) {
+    setInterval(backgroundTick, 250);
+}
+
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) return;
+    checkTimer();
+    if (timerDoneUnseen) {
+        timerDoneUnseen = false;
+        flashTimerComplete();
+    }
+    updateTitle();
+});
+
 // --- Mode switching ---
 
 const modeBtns = document.querySelectorAll('.mode-btn');
@@ -181,9 +287,8 @@ function switchMode(mode) {
         b.classList.toggle('active', active);
         b.setAttribute('aria-selected', active ? 'true' : 'false');
     });
-    if (mode === 'clock') renderClock();
-    else if (mode === 'stopwatch') renderStopwatch();
-    else if (mode === 'timer') renderTimer();
+    renderCurrentMode();
+    commitState();
 }
 
 modeBtns.forEach((btn) => {
@@ -197,14 +302,15 @@ const swReset = document.getElementById('sw-reset');
 
 swToggle.addEventListener('click', () => {
     if (state.stopwatch.running) {
-        state.stopwatch.elapsed += performance.now() - state.stopwatch.lastStart;
+        state.stopwatch.elapsed += Date.now() - state.stopwatch.lastStart;
         state.stopwatch.running = false;
         swToggle.textContent = state.stopwatch.elapsed > 0 ? 'Resume' : 'Start';
     } else {
-        state.stopwatch.lastStart = performance.now();
+        state.stopwatch.lastStart = Date.now();
         state.stopwatch.running = true;
         swToggle.textContent = 'Pause';
     }
+    commitState();
 });
 
 swReset.addEventListener('click', () => {
@@ -212,6 +318,7 @@ swReset.addEventListener('click', () => {
     state.stopwatch.elapsed = 0;
     swToggle.textContent = 'Start';
     renderStopwatch();
+    commitState();
 });
 
 // --- Timer controls ---
@@ -245,6 +352,7 @@ presetBtns.forEach((btn) => {
         tmToggle.textContent = 'Start';
         root.classList.remove('timer-complete');
         renderTimer();
+        commitState();
     });
 });
 
@@ -262,12 +370,13 @@ adjustBtns.forEach((btn) => {
         tmToggle.textContent = 'Start';
         root.classList.remove('timer-complete');
         renderTimer();
+        commitState();
     });
 });
 
 tmToggle.addEventListener('click', () => {
     if (state.timer.running) {
-        state.timer.remaining -= performance.now() - state.timer.lastStart;
+        state.timer.remaining = timerRemaining();
         state.timer.running = false;
         setTimerRunningClass(false);
         tmToggle.textContent = 'Resume';
@@ -276,12 +385,16 @@ tmToggle.addEventListener('click', () => {
             if (state.timer.duration <= 0) return;
             state.timer.remaining = state.timer.duration;
         }
-        state.timer.lastStart = performance.now();
+        state.timer.endsAt = Date.now() + state.timer.remaining;
         state.timer.running = true;
         setTimerRunningClass(true);
         tmToggle.textContent = 'Pause';
         root.classList.remove('timer-complete');
+        // Both need this click: browsers block sound and permission prompts without a gesture
+        try { unlockAudio(); } catch (e) { }
+        requestTimerNotifications();
     }
+    commitState();
 });
 
 tmReset.addEventListener('click', () => {
@@ -291,6 +404,7 @@ tmReset.addEventListener('click', () => {
     tmToggle.textContent = 'Start';
     root.classList.remove('timer-complete');
     renderTimer();
+    commitState();
 });
 
 // --- Fullscreen ---
@@ -327,6 +441,45 @@ function setParticles(on) {
 setParticles(particlesEnabled());
 
 particlesBtn?.addEventListener('click', () => setParticles(!particlesEnabled()));
+
+// --- Keep screen awake (persisted) ---
+
+const wakeBtn = document.getElementById('wake-btn');
+const wakeSupported = 'wakeLock' in navigator;
+let wakeWanted = false;
+let wakeLock = null;
+
+async function acquireWakeLock() {
+    if (!wakeWanted || wakeLock || document.hidden) return;
+    try {
+        const lock = await navigator.wakeLock.request('screen');
+        if (!wakeWanted) { lock.release(); return; }
+        wakeLock = lock;
+        lock.addEventListener('release', () => { wakeLock = null; });
+    } catch (e) {
+        // Refused, e.g. low battery: show off rather than claim a lock we don't hold
+        wakeWanted = false;
+        wakeBtn?.setAttribute('aria-pressed', 'false');
+    }
+}
+
+function setWakeLock(on) {
+    wakeWanted = on;
+    try { localStorage.setItem('wakeLock', on ? 'on' : 'off'); } catch (e) { }
+    wakeBtn?.setAttribute('aria-pressed', on ? 'true' : 'false');
+    if (on) acquireWakeLock();
+    else wakeLock?.release();
+}
+
+if (wakeSupported) {
+    wakeBtn?.addEventListener('click', () => setWakeLock(!wakeWanted));
+    // The browser releases the lock whenever the page is hidden
+    document.addEventListener('visibilitychange', acquireWakeLock);
+    try { setWakeLock(localStorage.getItem('wakeLock') === 'on'); } catch (e) { }
+} else {
+    wakeBtn?.remove();
+    document.getElementById('wake-shortcut')?.remove();
+}
 
 // --- Drag-to-spin + click-to-spin on digit cards ---
 
@@ -489,6 +642,8 @@ window.addEventListener('hashchange', () => {
 document.addEventListener('keydown', (event) => {
     const tag = event.target.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    // Leave browser shortcuts alone: Cmd+R would otherwise reset a saved timer as the page reloads
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
 
     if (event.key === 'Escape') {
         if (shortcutsOverlay && !shortcutsOverlay.hasAttribute('hidden')) {
@@ -506,6 +661,8 @@ document.addEventListener('keydown', (event) => {
 
     if (event.key === 'f' || event.key === 'F') {
         toggleFullScreen();
+    } else if (event.key === 'w' || event.key === 'W') {
+        if (wakeSupported) setWakeLock(!wakeWanted);
     } else if (event.key === '1') {
         switchMode('clock');
     } else if (event.key === '2') {
@@ -550,6 +707,49 @@ prefersDark.addEventListener('change', () => {
     } catch (e) { }
 });
 
+// --- Restore saved state ---
+
+function restoreState() {
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(STATE_KEY)); } catch (e) { return; }
+    if (!saved) return;
+
+    const num = (value) => (Number.isFinite(value) ? value : 0);
+    const { stopwatch: sw = {}, timer: tm = {} } = saved;
+
+    state.stopwatch.elapsed = Math.max(0, num(sw.elapsed));
+    state.stopwatch.lastStart = num(sw.lastStart);
+    state.stopwatch.running = sw.running === true && state.stopwatch.lastStart > 0;
+
+    if (Number.isFinite(tm.duration)) {
+        state.timer.duration = Math.max(0, Math.min(TIMER_MAX_MS, tm.duration));
+        state.timer.remaining = Math.max(0, Math.min(state.timer.duration, num(tm.remaining)));
+    }
+    state.timer.endsAt = num(tm.endsAt);
+    state.timer.running = tm.running === true && state.timer.endsAt > Date.now();
+    // Finished while the page was closed: show it as done, too late to alert about
+    if (tm.running === true && !state.timer.running) state.timer.remaining = 0;
+
+    swToggle.textContent = state.stopwatch.running ? 'Pause' : state.stopwatch.elapsed > 0 ? 'Resume' : 'Start';
+    const paused = state.timer.remaining > 0 && state.timer.remaining < state.timer.duration;
+    tmToggle.textContent = state.timer.running ? 'Pause' : paused ? 'Resume' : 'Start';
+    setTimerRunningClass(state.timer.running);
+    syncPresetHighlight();
+
+    if (['clock', 'stopwatch', 'timer'].includes(saved.mode)) switchMode(saved.mode);
+}
+
+// --- Service worker (offline + installable) ---
+
+let swRegistration = null;
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then((registration) => {
+        swRegistration = registration;
+    }).catch(() => { /* e.g. opened from file:// */ });
+}
+
 // --- Initial paint ---
 renderClock();
-renderTimer();
+restoreState();
+renderCurrentMode();
+updateTitle();

@@ -8,6 +8,10 @@ A simple digital clock built with [HTML, CSS, and JavaScript](https://developer.
 - Displays current time in a digital format (HH:MM:SS).
 - Automatically updates every second.
 - Customizable design using CSS.
+- Timer alerts in the background with a sound, a browser notification, and a countdown in the tab title.
+- Timer and stopwatch keep running through a page reload.
+- Keep-awake toggle that stops the screen sleeping (requires HTTPS or localhost).
+- Installable and works offline as a PWA (requires HTTPS or localhost, so not from `file://`).
 
 ## Installation
 
