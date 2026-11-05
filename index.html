@@ -43,6 +43,19 @@
                     document.documentElement.setAttribute('data-skin', s);
                 }
             } catch (e) { }
+
+            // Wallpaper links set their look from the URL, without saving it
+            var query = new URLSearchParams(location.search);
+            var embed = query.get('embed');
+            if (embed === null) return;
+            var html = document.documentElement;
+            html.setAttribute('data-embed', '');
+            if (embed === 'glass') html.removeAttribute('data-skin');
+            if (['led', 'flip', 'terminal'].indexOf(embed) !== -1) html.setAttribute('data-skin', embed);
+            var theme = query.get('theme');
+            if (theme === 'dark' || theme === 'light') html.setAttribute('data-theme', theme);
+            if (query.get('particles') === 'off') html.setAttribute('data-particles', 'off');
+            if (query.get('bg') === 'transparent') html.setAttribute('data-bg', 'transparent');
         })();
     </script>
 </head>
@@ -122,6 +135,14 @@
             <line x1="4" y1="4" x2="20" y2="20"></line>
         </svg>
     </button>
+
+    <button id="extras-btn" class="action-btn" aria-label="Open extras">
+        <svg class="extras-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"></path>
+        </svg>
+    </button>
+
+    <div class="day-fill" id="day-fill" aria-hidden="true" hidden></div>
 
 
     <div class="root-container" data-mode="clock">
@@ -219,6 +240,15 @@
                 <div class="controls-row">
                     <button class="control-btn primary" id="tm-toggle">Start</button>
                     <button class="control-btn" id="tm-reset">Reset</button>
+                    <button class="control-btn" id="tm-share" aria-label="Copy a link that shares this countdown">Share</button>
+                </div>
+            </div>
+
+            <div class="controls-group" data-controls="game">
+                <p class="game-status" id="game-status"></p>
+                <p class="game-hint">Drag a digit sideways or tap it to change it. Match the time before the round ends.</p>
+                <div class="controls-row">
+                    <button class="control-btn" id="game-exit">Exit game</button>
                 </div>
             </div>
         </div>
@@ -241,11 +271,72 @@
                 <div><dt><kbd>R</kbd></dt><dd>Reset</dd></div>
                 <div><dt><kbd>F</kbd></dt><dd>Toggle fullscreen</dd></div>
                 <div id="wake-shortcut"><dt><kbd>W</kbd></dt><dd>Keep screen awake</dd></div>
+                <div><dt><kbd>E</kbd></dt><dd>Open extras</dd></div>
+                <div><dt><kbd>G</kbd></dt><dd>Play the Digit Scrub Game</dd></div>
                 <div><dt><kbd>Esc</kbd></dt><dd>Close this overlay</dd></div>
             </dl>
             <p class="shortcuts-hint">Tip: click and drag a digit horizontally to scrub-spin it, or click the background for a particle burst.</p>
         </div>
     </div>
+
+    <div class="shortcuts-overlay" id="extras-overlay" hidden role="dialog" aria-labelledby="extras-title" aria-modal="true">
+        <div class="shortcuts-card extras-card" role="document">
+            <button class="shortcuts-close" id="extras-close" aria-label="Close extras">&times;</button>
+            <h2 id="extras-title">Extras</h2>
+
+            <section class="extras-section">
+                <h3>Ambience</h3>
+                <label class="extras-toggle"><span>Daylight fill<small>The background rises from 6 AM to 6 PM, then drains overnight.</small></span><input type="checkbox" data-extra="daylight"></label>
+                <label class="extras-toggle"><span>Minute particles<small>One particle per minute of the hour. They clear on the hour.</small></span><input type="checkbox" data-extra="minuteParticles"></label>
+                <label class="extras-toggle"><span>Timer pressure<small>Particles race and redden as a timer runs out. Digits tremble in the last 10 seconds.</small></span><input type="checkbox" data-extra="pressure"></label>
+            </section>
+
+            <section class="extras-section">
+                <h3>Sound</h3>
+                <label class="extras-toggle"><span>Skin ticking<small>A different tick for each skin.</small></span><input type="checkbox" data-extra="ticks"></label>
+                <label class="extras-toggle"><span>Melody on the hour<small>A short tune built from the digits of the time.</small></span><input type="checkbox" data-extra="melody"></label>
+                <button class="extras-action" id="melody-preview">Hear this minute's melody</button>
+            </section>
+
+            <section class="extras-section">
+                <h3>Moments</h3>
+                <label class="extras-toggle"><span>Moment catcher<small>Celebrate and collect times like 12:34:56, while Clock mode is showing.</small></span><input type="checkbox" data-extra="moments"></label>
+                <label class="extras-toggle"><span>Your special time<small>A birthday works too: 7 March can be 07:03.</small></span><input type="time" id="special-time"></label>
+                <p class="extras-meta" id="moments-count"></p>
+                <ul class="moments-list" id="moments-list"></ul>
+            </section>
+
+            <section class="extras-section">
+                <h3>Digit Scrub Game</h3>
+                <p class="extras-meta" id="game-best"></p>
+                <button class="extras-action" id="game-start">Play</button>
+            </section>
+
+            <section class="extras-section">
+                <h3>Time well spent</h3>
+                <div class="heatmap" id="heatmap" role="img"></div>
+                <div class="heatmap-legend" aria-hidden="true">
+                    <span>None</span>
+                    <span class="heat-cell heat-level-1"></span><span>under 30m</span>
+                    <span class="heat-cell heat-level-2"></span><span>30m+</span>
+                    <span class="heat-cell heat-level-3"></span><span>1h+</span>
+                    <span class="heat-cell heat-level-4"></span><span>2h+</span>
+                </div>
+                <p class="extras-meta" id="heatmap-readout"></p>
+            </section>
+
+            <section class="extras-section">
+                <h3>Wallpaper link</h3>
+                <p class="extras-meta">Shows only the clock, in your current skin and theme. Use it in OBS, Notion or a wallpaper app.</p>
+                <label class="extras-toggle"><span>Transparent background</span><input type="checkbox" id="wallpaper-transparent"></label>
+                <button class="extras-action" id="wallpaper-copy">Copy wallpaper link</button>
+            </section>
+
+            <p class="shortcuts-hint">Everything here stays on this device.</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script src="js/app.js"></script>
 </body>

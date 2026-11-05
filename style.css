@@ -2082,3 +2082,303 @@ html[data-skin="terminal"] .root-container.timer-complete .digital-clock-contain
         --digit-size: clamp(2.5rem, min(9.5vw, 21vh), 10rem);
     }
 }
+
+/* Extras button */
+#extras-btn {
+    right: 22rem;
+}
+
+@media (max-width: 720px) {
+    #extras-btn {
+        right: 16rem;
+    }
+}
+
+.extras-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: block;
+    fill: var(--btn-fg);
+}
+
+/* Daylight fill */
+.day-fill {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to top, hsl(var(--day-hue, 200) 85% 60% / 0.04), hsl(var(--day-hue, 200) 85% 60% / 0.2));
+    border-top: 1px solid hsl(var(--day-hue, 200) 85% 60% / 0.4);
+    transition: height 2s ease;
+}
+
+.day-fill[hidden] {
+    display: none;
+}
+
+/* Minute particles */
+.particle.minute-hidden {
+    display: none;
+}
+
+/* Timer pressure */
+.bg-particles[data-pressure] .particle {
+    background-color: color-mix(in srgb, #ef4444 var(--pressure, 0%), var(--color, var(--fg)));
+    filter: drop-shadow(0 0 8px color-mix(in srgb, #ef4444 var(--pressure, 0%), var(--color, var(--fg))));
+}
+
+.bg-particles[data-pressure] .particle.ring {
+    background-color: transparent;
+    border-color: color-mix(in srgb, #ef4444 var(--pressure, 0%), var(--color, var(--fg)));
+}
+
+.root-container.timer-final:not(.game-on)[data-mode="timer"] .digital-clock-container {
+    animation: timer-tremble 0.28s linear infinite;
+}
+
+@keyframes timer-tremble {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-1.5px, 1px); }
+    50% { transform: translate(1.5px, -1px); }
+    75% { transform: translate(-1px, -1px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .root-container.timer-final:not(.game-on)[data-mode="timer"] .digital-clock-container {
+        animation: none;
+    }
+}
+
+/* Digit Scrub Game */
+.root-container.game-on .controls-group[data-controls="timer"] {
+    display: none;
+}
+
+.root-container.game-on .controls-group[data-controls="game"] {
+    display: flex;
+}
+
+.root-container.game-on .group-container:not([data-type="second"]) .digit-item {
+    cursor: ew-resize;
+}
+
+.root-container.game-on .digit-item:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+}
+
+.game-status {
+    font-weight: 700;
+    font-size: clamp(0.85rem, 1.8vw, 1rem);
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    color: var(--fg);
+}
+
+.game-hint {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+}
+
+html[data-skin="terminal"] .root-container.game-on::before {
+    content: "\25CF \25CF \25CF    game \2014  zsh";
+}
+
+/* Extras panel */
+.extras-card {
+    max-width: 34rem;
+}
+
+.extras-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding-block: 1.1rem;
+    border-top: 1px solid var(--btn-border);
+}
+
+.extras-section h3 {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.extras-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.extras-toggle small {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.78rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--muted);
+}
+
+.extras-toggle input[type="checkbox"] {
+    flex-shrink: 0;
+    width: 1.15rem;
+    height: 1.15rem;
+    accent-color: var(--fg);
+    cursor: pointer;
+}
+
+.extras-toggle input[type="time"] {
+    flex-shrink: 0;
+    padding: 0.3rem 0.4rem;
+    font: inherit;
+    font-weight: 400;
+    color: var(--fg);
+    background-color: var(--btn-bg);
+    border: 1px solid var(--btn-border);
+    border-radius: 0.5rem;
+}
+
+.extras-action {
+    align-self: flex-start;
+    min-height: 2.25rem;
+    padding: 0.4rem 1rem;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--btn-fg);
+    background-color: var(--btn-bg);
+    border: 1px solid var(--btn-border);
+    border-radius: 0.6rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.extras-action:hover {
+    background-color: var(--btn-hover-bg);
+}
+
+.extras-action:focus-visible,
+.extras-toggle input:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+}
+
+.extras-meta {
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.moments-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    max-height: 7rem;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.moments-list:empty {
+    display: none;
+}
+
+.moments-list li {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--fg);
+    background-color: var(--btn-hover-bg);
+    border: 1px solid var(--btn-border);
+    border-radius: 999px;
+}
+
+/* Time well spent heatmap: one ink, deeper means more time */
+.heatmap {
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 2px;
+}
+
+.heat-cell {
+    display: block;
+    aspect-ratio: 1;
+    min-width: 0;
+    border-radius: 2px;
+    background-color: color-mix(in srgb, var(--fg) 9%, transparent);
+}
+
+.heat-level-1 { background-color: color-mix(in srgb, var(--fg) 30%, transparent); }
+.heat-level-2 { background-color: color-mix(in srgb, var(--fg) 50%, transparent); }
+.heat-level-3 { background-color: color-mix(in srgb, var(--fg) 72%, transparent); }
+.heat-level-4 { background-color: var(--fg); }
+
+.heatmap-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+}
+
+.heatmap-legend .heat-cell {
+    width: 0.7rem;
+    margin-left: 0.4rem;
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 4.25rem;
+    z-index: 3000;
+    max-width: calc(100vw - 2rem);
+    padding: 0.55rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--bg);
+    background-color: var(--fg);
+    border-radius: 0.75rem;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 0.5rem);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+/* Wallpaper links: nothing but the clock */
+html[data-embed] .action-btn,
+html[data-embed] .mode-switcher,
+html[data-embed] .clock-controls,
+html[data-embed] .toast {
+    display: none !important;
+}
+
+html[data-bg="transparent"] {
+    color-scheme: normal;
+}
+
+html[data-bg="transparent"],
+html[data-bg="transparent"] body {
+    background: transparent !important;
+}
+
+html[data-bg="transparent"] body::before,
+html[data-bg="transparent"] body::after,
+html[data-bg="transparent"] .bg-particles {
+    display: none;
+}
