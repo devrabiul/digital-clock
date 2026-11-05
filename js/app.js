@@ -369,7 +369,7 @@ allDigits.forEach((digit) => {
         try { digit.releasePointerCapture(event.pointerId); } catch (e) { }
         clearDigitDrag(digit);
         activeDrag = null;
-        if (!wasDrag && !digit.classList.contains('spin')) {
+        if (event.type === 'pointerup' && !wasDrag && !digit.classList.contains('spin')) {
             digit.classList.add('spin');
             digit.addEventListener('animationend', () => digit.classList.remove('spin'), { once: true });
         }

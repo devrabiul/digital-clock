@@ -378,15 +378,6 @@ body::after {
         inset 0 1px 0 var(--digit-highlight);
 }
 
-@media (max-width: 480px) {
-    .mode-switcher {
-        top: 0.6rem;
-        right: 0.6rem;
-        gap: 0.2rem;
-        padding: 0.2rem;
-    }
-}
-
 .mode-btn {
     background-color: transparent;
     color: var(--btn-fg);
@@ -411,13 +402,6 @@ body::after {
 .mode-btn.active {
     background-color: var(--fg);
     color: var(--bg);
-}
-
-@media (max-width: 480px) {
-    .mode-btn {
-        padding: 0.4rem 0.7rem;
-        letter-spacing: 0.05em;
-    }
 }
 
 .mode-btn:focus-visible {
@@ -458,12 +442,6 @@ body::after {
     align-items: center;
     gap: 0.6rem;
     width: 100%;
-}
-
-@media (max-width: 600px) {
-    .clock-controls {
-        bottom: 4rem;
-    }
 }
 
 .controls-row {
@@ -632,7 +610,7 @@ body::after {
 }
 
 .root-container[data-mode="timer"] .group-container[data-type="ampm"],
-.root-container[data-mode="timer"] .digital-clock-container > .separator:last-of-type {
+.root-container[data-mode="timer"] .digital-clock-container > .separator:nth-last-child(2) {
     display: none;
 }
 
@@ -657,6 +635,9 @@ body::after {
 }
 
 .digital-clock-container {
+    --digit-size: clamp(3.25rem, 11vw, 10rem);
+    --digit-font: calc(var(--digit-size) - 1.5rem);
+    --label-space: clamp(2rem, 3vw, 2.25rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -671,7 +652,7 @@ body::after {
     justify-content: center;
     gap: clamp(0.35rem, 1vw, 0.75rem);
     position: relative;
-    margin-bottom: clamp(2rem, 3vw, 2.25rem);
+    margin-bottom: var(--label-space);
 }
 
 .digital-clock-container .digit-item-type {
@@ -688,10 +669,9 @@ body::after {
 }
 
 .digital-clock-container .group-container .digit-item {
-    --size: clamp(3.25rem, 11vw, 10rem);
-    height: var(--size);
-    width: calc(var(--size) * 0.86);
-    font-size: calc(var(--size) - 1.5rem);
+    height: var(--digit-size);
+    width: calc(var(--digit-size) * 0.86);
+    font-size: var(--digit-font);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     line-height: 1;
@@ -711,6 +691,7 @@ body::after {
         var(--digit-shadow),
         inset 0 1px 0 var(--digit-highlight);
     user-select: none;
+    touch-action: pan-y;
     cursor: pointer;
     transition:
         transform 0.4s ease-in-out,
@@ -887,6 +868,8 @@ html[data-skin="terminal"] .digital-clock-container .separator-item {
     padding: 2rem 2.25rem;
     max-width: 32rem;
     width: 100%;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
     backdrop-filter: blur(20px) saturate(160%);
     -webkit-backdrop-filter: blur(20px) saturate(160%);
     box-shadow:
@@ -1015,7 +998,8 @@ html[data-skin="terminal"] .digital-clock-container .separator-item {
     justify-content: center;
     flex-direction: column;
     gap: clamp(0.75rem, 2vw, 1.25rem);
-    height: clamp(3.25rem, 11vw, 10rem);
+    height: var(--digit-size);
+    margin-bottom: var(--label-space);
 }
 
 .digital-clock-container .separator-item {
@@ -1040,17 +1024,6 @@ html[data-skin="terminal"] .digital-clock-container .separator-item {
     .digital-clock-container .separator-item {
         animation: none;
         opacity: 0.7;
-    }
-}
-
-@media (max-width: 560px) {
-    .digital-clock-container {
-        flex-direction: column;
-        gap: clamp(1.75rem, 6vw, 2.5rem);
-    }
-
-    .digital-clock-container .separator {
-        display: none;
     }
 }
 
@@ -1261,22 +1234,267 @@ html[data-skin="terminal"] .digital-clock-container .separator-item {
 }
 
 .theme-icon {
-    width: 1.1rem;
-    height: 1.1rem;
-    border-radius: 50%;
-    background: transparent;
-    box-shadow: inset 0 0 0 0.15rem var(--btn-fg);
-    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    position: relative;
+    width: 1.25rem;
+    height: 1.25rem;
+    display: block;
 }
 
-[data-theme="dark"] .theme-icon {
-    background: var(--btn-fg);
-    box-shadow: inset 0.35rem -0.25rem 0 0.05rem var(--btn-bg);
+.theme-icon svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--btn-fg);
+    transition: opacity 0.3s ease, transform 0.4s ease;
+}
+
+.theme-moon {
+    opacity: 0;
+    transform: rotate(-60deg) scale(0.5);
+}
+
+[data-theme="dark"] .theme-sun {
+    opacity: 0;
+    transform: rotate(60deg) scale(0.5);
+}
+
+[data-theme="dark"] .theme-moon {
+    opacity: 1;
+    transform: none;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .theme-icon {
-        background: var(--btn-fg);
-        box-shadow: inset 0.35rem -0.25rem 0 0.05rem var(--btn-bg);
+    :root:not([data-theme="light"]) .theme-sun {
+        opacity: 0;
+        transform: rotate(60deg) scale(0.5);
+    }
+
+    :root:not([data-theme="light"]) .theme-moon {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .theme-icon svg {
+        transition: none;
+    }
+}
+
+/* Responsive layout */
+button {
+    touch-action: manipulation;
+}
+
+@media (hover: none) {
+    .action-btn:hover,
+    .control-btn:hover,
+    .preset-btn:hover {
+        transform: none;
+    }
+}
+
+/* Narrow or short screens: the controls join the page flow so they can't cover the digits */
+@media (max-width: 960px), (max-height: 640px) {
+    html,
+    body {
+        height: auto;
+    }
+
+    body {
+        padding: 4.25rem 1rem 4.5rem;
+    }
+
+    .root-container {
+        padding: 0;
+    }
+
+    .digital-clock-container {
+        padding: 0.75rem 0;
+    }
+
+    .mode-btn {
+        min-height: 2.5rem;
+    }
+
+    .clock-controls {
+        position: static;
+        transform: none;
+        width: min(100%, 26rem);
+        max-width: none;
+        margin: 0.25rem auto 0;
+    }
+
+    .controls-row {
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+
+    .control-btn {
+        flex: 1;
+        min-width: 0;
+        padding-inline: 0.5rem;
+    }
+
+    .timer-presets {
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+
+    .preset-btn {
+        flex: 1;
+        min-height: 2.5rem;
+        padding-inline: 0;
+    }
+
+    .timer-adjusters {
+        width: 100%;
+    }
+
+    .adjuster {
+        flex: 1;
+        flex-direction: row-reverse;
+        align-items: center;
+        min-width: 0;
+    }
+
+    .adjust-btn {
+        flex: 1;
+        min-height: 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    .adjuster-label {
+        letter-spacing: 0;
+        padding: 0 0.15rem;
+    }
+
+    .shortcuts-card {
+        padding: 1.5rem 1.25rem;
+    }
+}
+
+/* Phones in portrait: 2x2 digit grid, or one HH:MM:SS row for the timer */
+@media (max-width: 560px) {
+    .mode-switcher {
+        top: 0.75rem;
+        left: 1rem;
+        right: 1rem;
+        gap: 0.2rem;
+        padding: 0.2rem;
+    }
+
+    .mode-btn {
+        flex: 1;
+        padding-inline: 0.25rem;
+        letter-spacing: 0.05em;
+    }
+
+    .digital-clock-container {
+        --digit-size: min(22vw, 13vh);
+        --digit-font: calc(var(--digit-size) * 0.72);
+        --label-space: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        justify-content: center;
+        gap: 0.5rem 1rem;
+    }
+
+    .digital-clock-container .digit-item-type {
+        bottom: -1.4rem;
+        letter-spacing: 0.15em;
+    }
+
+    .digital-clock-container .group-container {
+        gap: 0.25rem;
+    }
+
+    .digital-clock-container .separator {
+        display: none;
+    }
+
+    .root-container[data-mode="timer"] .digital-clock-container {
+        --digit-size: 14.5vw;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.25rem;
+    }
+
+    .root-container[data-mode="timer"] .digital-clock-container .separator {
+        display: flex;
+        gap: 0.6rem;
+    }
+
+    .root-container[data-mode="timer"] .digital-clock-container > .separator:nth-last-child(2) {
+        display: none;
+    }
+}
+
+/* Phones in landscape: everything goes in one top bar to save height */
+@media (max-height: 500px) and (min-width: 561px) {
+    body {
+        padding: 3.5rem 1rem 0.75rem;
+    }
+
+    .digital-clock-container {
+        --digit-size: clamp(2.75rem, min(11vw, 24vh), 10rem);
+        --digit-font: calc(var(--digit-size) * 0.72);
+        --label-space: 1.5rem;
+        padding: 0.25rem 0;
+    }
+
+    .digital-clock-container .digit-item-type {
+        bottom: -1.4rem;
+    }
+
+    .clock-header-container {
+        padding: 0.2rem 0;
+    }
+
+    .mode-switcher {
+        top: 0.5rem;
+        left: 1rem;
+        right: auto;
+    }
+
+    .mode-btn {
+        min-height: 2.25rem;
+        padding-block: 0.25rem;
+    }
+
+    .action-btn {
+        top: 0.5rem;
+        bottom: auto;
+    }
+
+    .clock-controls {
+        width: min(100%, 40rem);
+        padding: 0.5rem 0.75rem;
+    }
+
+    .controls-group[data-controls="timer"] {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.4rem 0.75rem;
+    }
+
+    .timer-presets,
+    .timer-adjusters {
+        flex: 1 1 0;
+        width: auto;
+    }
+
+    .controls-group .controls-row {
+        flex-basis: 100%;
+    }
+
+    .control-btn {
+        padding-block: 0.45rem;
+    }
+
+    .preset-btn,
+    .adjust-btn {
+        min-height: 2.25rem;
     }
 }
